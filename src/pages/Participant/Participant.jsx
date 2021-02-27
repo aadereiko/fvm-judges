@@ -7,7 +7,7 @@ import {
 } from './elements';
 import PropTypes from 'prop-types';
 import { PARTICIPANTS } from '../../mock/participants';
-import { Card, Table } from 'react-bootstrap';
+import { Button, Card, Table } from 'react-bootstrap';
 import { NOMINATIONS } from '../../mock';
 
 export const Participant = ({ id }) => {
@@ -26,6 +26,7 @@ export const Participant = ({ id }) => {
               <Card.Subtitle className="mb-2 text-muted">
                 Оценка: {currentParticipant.nominations[nominationId].mark}
               </Card.Subtitle>
+              <Card.Link href="#">Перейти</Card.Link>
             </Card.Body>
           </CardElement>
         ))}
