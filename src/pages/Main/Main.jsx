@@ -8,6 +8,7 @@ import { ParticipantsContainer } from '../Participants';
 import { ParticipantContainer } from '../Participant';
 import { NominationsContainer } from '../Nominations';
 import { NominationContainer } from '../Nomination';
+import { ParticipantPhotoContainer } from '../ParticipantPhoto';
 
 const ContentElement = styled.div`
   background-color: ${APP_COLORS.SUPER_LIGHT_GRAY};
@@ -20,6 +21,7 @@ const RouterWrapperElement = styled.div`
   margin-left: 10%;
   // look up why margin doesnt work
   padding-top: 30px;
+  padding-bottom: 30px;
 `;
 
 export const Main = () => {
@@ -34,6 +36,11 @@ export const Main = () => {
               <Route path="/participants/:id" exact component={ParticipantContainer} />
               <Route path="/nominations" exact component={NominationsContainer} />
               <Route path="/nominations/:id" exact component={NominationContainer} />
+              <Route
+                path="/photos/:nominationId/:participantId"
+                exact
+                component={ParticipantPhotoContainer}
+              />
             </Switch>
           </RouterWrapperElement>
         </ContentElement>

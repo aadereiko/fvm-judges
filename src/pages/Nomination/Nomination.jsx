@@ -24,7 +24,9 @@ export const Nomination = ({ name, id, photos }) => {
                 Участник
               </Card.Link>
               <br></br>
-              <Card.Link href="#">Оценить</Card.Link>
+              <Card.Link as={Link} to={`/photos/${id}/${photo.participantId}`}>
+                Оценить
+              </Card.Link>
             </Card.Body>
           </CardElement>
         ))}

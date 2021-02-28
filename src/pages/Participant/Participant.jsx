@@ -35,7 +35,9 @@ export const Participant = ({ id }) => {
                 Номинация
               </Card.Link>
               <br></br>
-              <Card.Link href="#">Оценить</Card.Link>
+              <Card.Link as={Link} to={`/photos/${nominationId}/${id}`}>
+                Оценить
+              </Card.Link>
             </Card.Body>
           </CardElement>
         ))}

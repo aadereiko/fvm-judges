@@ -4,7 +4,7 @@ import { Card } from 'react-bootstrap';
 export const NominationWrapperElement = styled.div``;
 
 export const CardElement = styled(Card)`
-  width: calc(15% - 30px);
+  width: calc(20% - 30px);
   margin: 5px;
 `;
 
