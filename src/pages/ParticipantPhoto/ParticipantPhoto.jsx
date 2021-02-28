@@ -9,9 +9,11 @@ import {
   StarFillIconElement,
   MarkLabelElement,
   MarksWrapperElement,
+  ArrowLeftIconElement,
+  ArrowRightIconElement,
 } from './elements';
 import { photoPropType } from '../../shared/propTypes';
-import { Button } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const getMarkStar = (currentMark, setMark, section, clickCallback = () => {}) => {
@@ -31,6 +33,7 @@ const getMarkStar = (currentMark, setMark, section, clickCallback = () => {}) =>
 
 export const ParticipantPhoto = ({ participantId, nominationId, nominationName, photo }) => {
   const marks = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
+  const [showPicture, setShowPicture] = useState(false);
   const [look, setLook] = useState(photo.mark);
   const [idea, setIdea] = useState(photo.mark);
 
@@ -38,7 +41,10 @@ export const ParticipantPhoto = ({ participantId, nominationId, nominationName, 
     (photo && (
       <ParticipantPhotoWrapperElement>
         <PhotoWrapperElement>
-          <img src={photo.img}></img>
+          <ArrowLeftIconElement width="6%" height="6%" />
+          <ArrowRightIconElement width="6%" height="6%" />
+
+          <img src={photo.img} alt="Фото номинации" onClick={() => setShowPicture(true)}></img>
         </PhotoWrapperElement>
         <PhotoInfoBlockElement>
           <h3>{nominationName}</h3>

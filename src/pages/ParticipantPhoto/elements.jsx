@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { ReactComponent as StarIcon } from '../../shared/assets/icons/star.svg';
 import { ReactComponent as StarFillIcon } from '../../shared/assets/icons/star-fill.svg';
+import { ReactComponent as ArrowLeftIcon } from '../../shared/assets/icons/arrow-left-circle-fill.svg';
+import { ReactComponent as ArrowRightIcon } from '../../shared/assets/icons/arrow-right-circle-fill.svg';
 
 export const ParticipantPhotoWrapperElement = styled.div`
   display: flex;
@@ -20,7 +22,6 @@ export const PhotoWrapperElement = styled.div`
   width: 50%;
   img {
     max-width: 100%;
-    cursor: zoom-in;
   }
 `;
 
@@ -56,4 +57,18 @@ export const MarkLabelElement = styled.span`
 export const MarksWrapperElement = styled.div`
   margin-top: 1rem;
   margin-bottom: 1rem;
+`;
+
+export const ArrowLeftIconElement = styled(ArrowLeftIcon)`
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  cursor: pointer;
+`;
+
+export const ArrowRightIconElement = styled(ArrowRightIcon)`
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  cursor: pointer;
 `;
