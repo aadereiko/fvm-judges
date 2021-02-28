@@ -4,5 +4,5 @@ import { Participant } from './Participant';
 
 export const ParticipantContainer = () => {
   const { id } = useParams();
-  return id && <Participant id={id} /> || null;
+  return (id && <Participant id={id} />) || null;
 };

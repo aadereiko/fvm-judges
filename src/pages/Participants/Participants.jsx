@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { NOMINATIONS } from '../../mock';
 import { PARTICIPANTS } from '../../mock/participants';
 import { ParticipantsWrapperElement } from './elements';

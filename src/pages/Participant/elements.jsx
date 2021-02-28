@@ -13,10 +13,10 @@ export const ParticipantTitleElement = styled.span`
 export const PhotosWrapperElement = styled.div`
   width: 100%;
   display: flex;
-  overflow-x: hidden;
+  flex-wrap: wrap;
 `;
 
 export const CardElement = styled(Card)`
-  width: 12rem;
+  width: calc(30% - 30px);
   margin: 5px;
 `;

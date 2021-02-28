@@ -15,12 +15,9 @@ export const Header = () => {
           <Nav.Link as={Link} to="/nominations">
             Номинации
           </Nav.Link>
-          <Nav.Link as={Link} to="/photos">
-            Фото
-          </Nav.Link>
         </Nav>
         <DropdownButton variant="light" title="Иван Иванович">
-          <Dropdown.Item >Выйти</Dropdown.Item>
+          <Dropdown.Item>Выйти</Dropdown.Item>
         </DropdownButton>
       </NavbarElement>
     </div>
