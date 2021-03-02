@@ -23,7 +23,7 @@ export const Nominations = ({ nominations }) => {
           </tr>
         </thead>
         <tbody>
-          {nominations.map(({ name, id }) => (
+          {nominations.map(({ name, id, driveId }) => (
             <tr key={id}>
               <td>
                 <b>{name}</b>
@@ -41,7 +41,7 @@ export const Nominations = ({ nominations }) => {
                 {/* </OverlayTrigger> */}
               </td>
               <td>
-                <Link to={`nominations/${id}`}>
+                <Link to={`nominations/${driveId}`}>
                   <ArrowIcon />
                 </Link>
               </td>

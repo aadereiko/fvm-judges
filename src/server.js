@@ -35,5 +35,23 @@ app.get('/api/google/nominations', (req, res) => {
   google.getNominations(res)
 });
 
+app.get('/api/google/nomination', (req, res) => {
+  let nominationsId = req.query.nom;
+  
+  google.getNomination(res, nominationsId);
+});
+
+app.get('/api/google/photo', (req, res) => {
+  let photoId = req.query.photoId;
+  
+  google.getPhoto(res, photoId);
+})
+
+app.get('/api/google/photos', (req, res) => {
+  let nominationsId = req.query.nom;
+  
+  google.getPhotosId(res, nominationsId);
+})
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
