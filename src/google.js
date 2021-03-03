@@ -2,22 +2,36 @@ const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
 
-// If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive.readonly'];
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
 const TOKEN_PATH = 'token.json';
-let response;
-// Load client secrets from a local file.
-function init(res, callback) {
-  response = res;
-  fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    // Authorize a client with credentials, then call the Google Drive API.
-    // authorize(JSON.parse(content), listFiles);
-    authorize(JSON.parse(content), callback || listFiles);
-  });
+
+const readFile = (path, errMsg, opts = 'utf8') =>
+  new Promise((resolve, reject) => {
+    fs.readFile(path, opts, (err, data) => {
+      if (err) {
+        console.log(errMsg);
+        reject(err)
+      }
+      else resolve(data)
+    })
+  })
+
+
+async function init(callback) {
+  const content = await new Promise((resolve, reject) => {
+    fs.readFile('credentials.json', 'utf8', (err, data) => {
+      if (err) {
+        console.log('Error loading client secret file:', err);
+        reject(err)
+      }
+      else resolve(data)
+    })
+  })
+
+  const data = await authorize(JSON.parse(content), callback);
+
+  // console.log(0, data);
+  return data;
 }
 
 /**
@@ -26,17 +40,35 @@ function init(res, callback) {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+async function authorize(credentials, callback) {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id, client_secret, redirect_uris[0]);
 
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getAccessToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
-  });
+  const token = await new Promise((resolve, reject) => {
+    fs.readFile(TOKEN_PATH, 'utf8', async (err, data) => {
+      if (err) {
+        const callbackData = await getAccessToken(oAuth2Client, callback);
+        reject(callbackData)
+      }
+      else resolve(data)
+    })
+  })
+
+  // const data = await fs.readFile(TOKEN_PATH, async (err, token) => {
+  //   if (err) {
+  //     const callbackData = await getAccessToken(oAuth2Client, callback);
+
+  //     return callbackData
+  //   }
+  //   console.log(3, callbackData);
+  //   return callbackData
+  // });
+  oAuth2Client.setCredentials(JSON.parse(token));
+  const data = await callback(oAuth2Client);
+
+  // console.log(1, data);
+  return data;
 }
 
 /**
@@ -70,26 +102,8 @@ function getAccessToken(oAuth2Client, callback) {
   });
 }
 
-/**
- * Lists the names and IDs of up to 10 files.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-async function listFiles(auth) {
-  const drive = google.drive({ version: 'v2', auth });
-  const folders = await drive.children.list({
-    folderId: '1MmjutDdTs1b96J1KNRVmZszcmADMVE9z'
-  })
-  folders.data.items.forEach(async item => {
-    const folder = await drive.files.get({
-      fileId: item.id
-    })
-    console.log(folder.data.title);
-  })
-  response.send({ answer: 'fine' })
-}
-
-function getNominations(res) {
-  init(res, async function (auth) {
+async function getNominations(id) {
+  const nominationsInfo = await init(async function (auth) {
     const drive = google.drive({ version: 'v2', auth });
 
     const folders = await drive.children.list({
@@ -109,39 +123,46 @@ function getNominations(res) {
       })
     }
 
-    res.send({ nominations })
+    // res.send({ nominations })
+    // console.log(3, nominations)
+    return nominations;
   })
+
+  // console.log(2, nominationsInfo)
+  return nominationsInfo;
 }
 
-async function getPhoto(res, photoId) {
-  init(res, async function (auth) {
+async function getPhoto(photoId) {
+  const data = init(async function (auth) {
     const drive = google.drive({ version: 'v2', auth });
     const photoName = await drive.files.get({
       fileId: photoId
     });
-    console.log(photoName.data);
-    const photo = await drive.files.get({
-      fileId: photoId,
-      alt: 'media'
-    }, {
-      responseType: 'arraybuffer',
-      encoding: null
-    }, function (err, response) {
-      if (err) {
-        console.log(err);
-      } else {
-        var imageType = response.headers['content-type'];
-        var base64 = new Buffer.from(response.data, 'utf8').toString('base64');
-        var dataURI = 'data:' + imageType + ';base64,' + base64;
+    // const photo = await drive.files.get({
+    //   fileId: photoId,
+    //   alt: 'media'
+    // }, {
+    //   responseType: 'arraybuffer',
+    //   encoding: null
+    // }, function (err, response) {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     var imageType = response.headers['content-type'];
+    //     var base64 = new Buffer.from(response.data, 'utf8').toString('base64');
+    //     var dataURI = 'data:' + imageType + ';base64,' + base64;
+    // res.send({ name: photoName.data.title, link: photoName.data.thumbnailLink });
 
-        res.send({ name: photoName.data.title, link: photoName.data.thumbnailLink });
-      }
-    });
+    // });
+    // }
+    return { name: photoName.data.title, link: photoName.data.thumbnailLink }
   })
+
+  return data;
 }
 
-async function getNomination(res, nominationId) {
-  init(res, async function (auth) {
+async function getNomination(nominationId) {
+  const data = await init(async function (auth) {
     const drive = google.drive({ version: 'v2', auth });
 
     const folder = await drive.files.get({
@@ -152,22 +173,27 @@ async function getNomination(res, nominationId) {
       folderId: nominationId
     })
 
-    let photosId = photos.data.items.map(photo => photo.id);
+    let photosId = await Promise.all(photos.data.items.map(photo => photo.id));
 
-    res.send({ name: folder.data.title, photosId })
+    return { name: folder.data.title, photosId }
   });
+
+  return data;
 }
 
-async function getNominationName(res, nominationId) {
-  init(res, async function (auth) {
+async function getNominationName(nominationId) {
+  const data = await init(async function (auth) {
     const drive = google.drive({ version: 'v2', auth });
 
     const folder = await drive.files.get({
       fileId: nominationId
     })
 
-    res.send({ name: folder.data.title })
+    // res.send({ name: folder.data.title })
+    return { name: folder.data.title }
   });
+
+  return data;
 }
 
 async function getPhotosId(res, nominationId) {
