@@ -9,7 +9,7 @@ export const NominationContainer = () => {
   const [name, setName] = useState('');
   const [photos, setPhotos] = useState([]);
   useEffect(() => {
-    fetch(`/api/google/nomination?nom=${id}`)
+    fetch(`/api/google/nomination/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setName(data.name);

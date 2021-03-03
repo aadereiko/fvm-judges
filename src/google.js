@@ -119,6 +119,7 @@ async function getPhoto(res, photoId) {
     const photoName = await drive.files.get({
       fileId: photoId
     });
+    console.log(photoName.data);
     const photo = await drive.files.get({
       fileId: photoId,
       alt: 'media'
@@ -133,7 +134,7 @@ async function getPhoto(res, photoId) {
         var base64 = new Buffer.from(response.data, 'utf8').toString('base64');
         var dataURI = 'data:' + imageType + ';base64,' + base64;
 
-        res.send({ photo: dataURI, name: photoName.data.title });
+        res.send({ name: photoName.data.title, link: photoName.data.thumbnailLink });
       }
     });
   })
@@ -157,6 +158,18 @@ async function getNomination(res, nominationId) {
   });
 }
 
+async function getNominationName(res, nominationId) {
+  init(res, async function (auth) {
+    const drive = google.drive({ version: 'v2', auth });
+
+    const folder = await drive.files.get({
+      fileId: nominationId
+    })
+
+    res.send({ name: folder.data.title })
+  });
+}
+
 async function getPhotosId(res, nominationId) {
   init(res, async function (auth) {
     const drive = google.drive({ version: 'v2', auth });
@@ -164,6 +177,7 @@ async function getPhotosId(res, nominationId) {
     const photos = await drive.children.list({
       folderId: nominationId
     })
+
     let photosId = photos.data.items.map(photo => photo.id);
     res.send({ photosId })
   });
@@ -172,5 +186,6 @@ async function getPhotosId(res, nominationId) {
 module.exports.init = init;
 module.exports.getNominations = getNominations;
 module.exports.getNomination = getNomination;
+module.exports.getNominationName = getNominationName;
 module.exports.getPhoto = getPhoto;
 module.exports.getPhotosId = getPhotosId;

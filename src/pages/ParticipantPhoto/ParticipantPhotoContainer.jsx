@@ -1,23 +1,41 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { NOMINATIONS } from '../../mock';
 import { PARTICIPANTS } from '../../mock/participants';
 import { ParticipantPhoto } from './ParticipantPhoto';
 
 export const ParticipantPhotoContainer = () => {
-  const { participantId, nominationId } = useParams();
-  const nominationName = useMemo(
-    () => (NOMINATIONS[nominationId - 1] && NOMINATIONS[nominationId - 1].name) || '',
-    [nominationId],
-  );
-  const photo = useMemo(() => {
-    return (
-      (PARTICIPANTS[participantId] &&
-        PARTICIPANTS[participantId].nominations &&
-        PARTICIPANTS[participantId].nominations[nominationId]) ||
-      null
-    );
-  }, [nominationId, participantId]);
+  const { participantId, nominationId } = useParams({});
+  const [nominationName, setNominationName] = useState('');
+  const [photo, setPhoto] = useState();
+
+  useEffect(() => {
+    fetch(`/api/google/photo/${participantId}`)
+      .then((response) => response.json())
+      .then(({ name, link }) => {
+        setPhoto({ name, link });
+      })
+      .catch((err) => console.log(err));
+    fetch(`/api/google/nomination/name/${nominationId}`)
+      .then((response) => response.json())
+      .then(({ name }) => {
+        setNominationName(name);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  // const nominationName = useMemo(
+  //   () => (NOMINATIONS[nominationId - 1] && NOMINATIONS[nominationId - 1].name) || '',
+  //   [nominationId],
+  // );
+  // const photo = useMemo(() => {
+  //   return (
+  //     (PARTICIPANTS[participantId] &&
+  //       PARTICIPANTS[participantId].nominations &&
+  //       PARTICIPANTS[participantId].nominations[nominationId]) ||
+  //     null
+  //   );
+  // }, [nominationId, participantId]);
 
   return (
     <ParticipantPhoto

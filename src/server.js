@@ -5,6 +5,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const google = require('./google');
+const mongodb = require('./mongodb');
 // google.init();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,17 +17,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
-});
-
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
-});
-
 app.get('/api/google', (req, res) => {
   google.init(res)
 });
@@ -35,23 +25,34 @@ app.get('/api/google/nominations', (req, res) => {
   google.getNominations(res)
 });
 
-app.get('/api/google/nomination', (req, res) => {
-  let nominationsId = req.query.nom;
+app.get('/api/google/nomination/:id', (req, res) => {
+  let nominationsId = req.params.id
   
   google.getNomination(res, nominationsId);
 });
 
-app.get('/api/google/photo', (req, res) => {
-  let photoId = req.query.photoId;
+app.get('/api/google/nomination/name/:id', (req, res) => {
+  let nominationsId = req.params.id
+  
+  google.getNominationName(res, nominationsId);
+});
+
+app.get('/api/google/photo/:id', (req, res) => {
+  let photoId = req.params.id
   
   google.getPhoto(res, photoId);
 })
 
-app.get('/api/google/photos', (req, res) => {
-  let nominationsId = req.query.nom;
-  
+app.get('/api/google/photos/:id', (req, res) => {
+  let nominationsId = req.params.id
+
   google.getPhotosId(res, nominationsId);
 })
+
+app.get('/api/mongo', (req, res) => {
+  mongodb.connectDB(item => console.log(item))
+  res.send({connect: "fine"})
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

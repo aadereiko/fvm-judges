@@ -8,10 +8,10 @@ export const Nomination = ({ name, id, photos }) => {
   const [allPhotos, setAllPhotos] = useState({});
   useEffect(() => {
     photos.map((item) => {
-      fetch(`/api/google/photo?photoId=${item}`)
+      fetch(`/api/google/photo/${item}`)
         .then((response) => response.json())
-        .then(({ name, photo }) => {
-          setAllPhotos((prevState) => ({ ...prevState, [item]: { name, photo } }));
+        .then(({ name, link }) => {
+          setAllPhotos((prevState) => ({ ...prevState, [item]: { name, link } }));
         })
         .catch((err) => console.log(err));
     });
@@ -27,7 +27,7 @@ export const Nomination = ({ name, id, photos }) => {
             // bg={photo.mark ? 'light' : 'dark'}
             // text={photo.mark ? 'dark' : 'light'}
           >
-            <Card.Img variant="top" src={allPhotos[photoId] ? allPhotos[photoId].photo : ''} />
+            <Card.Img variant="top" src={allPhotos[photoId] ? allPhotos[photoId].link : ''} />
             <Card.Body>
               <Card.Title>Участник {allPhotos[photoId] ? allPhotos[photoId].name : ''}</Card.Title>
               {/* <Card.Subtitle className="mb-2 text-muted">Оценка: {photo.mark || '-'}</Card.Subtitle> */}

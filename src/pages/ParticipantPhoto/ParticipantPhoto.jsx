@@ -31,11 +31,15 @@ const getMarkStar = (currentMark, setMark, section, clickCallback = () => {}) =>
   );
 };
 
+const getFullImage = (photoLink) => {
+  return photoLink.split('=s220')[0];
+};
+
 export const ParticipantPhoto = ({ participantId, nominationId, nominationName, photo }) => {
   const marks = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
   const [showPicture, setShowPicture] = useState(false);
-  const [look, setLook] = useState(photo.mark);
-  const [idea, setIdea] = useState(photo.mark);
+  const [look, setLook] = useState(1);
+  const [idea, setIdea] = useState(1);
 
   return (
     (photo && (
@@ -44,11 +48,15 @@ export const ParticipantPhoto = ({ participantId, nominationId, nominationName, 
           <ArrowLeftIconElement width="6%" height="6%" />
           <ArrowRightIconElement width="6%" height="6%" />
 
-          <img src={photo.img} alt="Фото номинации" onClick={() => setShowPicture(true)}></img>
+          <img
+            src={getFullImage(photo.link)}
+            alt="Фото номинации"
+            onClick={() => setShowPicture(true)}
+          ></img>
         </PhotoWrapperElement>
         <PhotoInfoBlockElement>
           <h3>{nominationName}</h3>
-          <p className="text-muted">Участник {participantId}</p>
+          <p className="text-muted">Участник {photo.name}</p>
           <MarksWrapperElement>
             <h4>Оценки:</h4>
             <span>Идея:</span>
