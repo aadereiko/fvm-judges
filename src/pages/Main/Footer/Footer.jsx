@@ -20,7 +20,7 @@ export const Footer = () => {
           </Nav.Link> */}
           <Nav.Link href="https://t.me/fotovelo" target="_blanked">
             <TelegramIconElement />
-            Телеграм
+            Telegram
           </Nav.Link>
         </Nav>
       </NavbarElement>
