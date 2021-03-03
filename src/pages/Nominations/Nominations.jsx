@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 import { nominationPropType } from '../../shared/propTypes/nominations';
 import { NominationsWrapperElement } from './elements';
-import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-square.svg';
+import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-circle.svg';
 import { ReactComponent as CheckedIcon } from '../../shared/assets/icons/check-circle.svg';
 import { ReactComponent as DashIcon } from '../../shared/assets/icons/dash-circle.svg';
 import { Link } from 'react-router-dom';
@@ -19,7 +19,7 @@ export const Nominations = ({ nominations }) => {
             <th>Оценено</th>
             <th>Всего</th>
             <th>Статус</th>
-            <th></th>
+            <th>Перейти</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +42,7 @@ export const Nominations = ({ nominations }) => {
               </td>
               <td>
                 <Link to={`nominations/${id}`}>
-                  <ArrowIcon />
+                  <ArrowIcon fill="black" width="1.1rem" height="1.1rem" />
                 </Link>
               </td>
             </tr>

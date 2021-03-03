@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap';
 import { NOMINATIONS } from '../../mock';
 import { PARTICIPANTS } from '../../mock/participants';
 import { ParticipantsWrapperElement } from './elements';
-import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-square.svg';
+import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-circle.svg';
 import { Link } from 'react-router-dom';
 
 export const Participants = () => {
@@ -29,7 +29,7 @@ export const Participants = () => {
               ))}
               <td>
                 <Link to={`participants/${id}`}>
-                  <ArrowIcon />
+                  <ArrowIcon color="black" width="1.1rem" height="1.1rem" />
                 </Link>
               </td>
             </tr>
