@@ -3,7 +3,9 @@ const mongodb = require('./mongodb');
 
 const create = async (seasonId) => {
     const season = await mongodb.createSeason(seasonId);
-    console.log('fine', season)
+    const nominations = await setNominations(seasonId);
+    const participants = await setParticipants(seasonId, nominations);
+    console.log('fine')
 }
 
 function delay(ms) {
@@ -13,33 +15,62 @@ function delay(ms) {
 }
 
 const setNominations = async (seasonId) => {
-    const nominationsInfo = await google.getNominations('s');
+    const nominationsInfo = await google.getNominations(seasonId);
 
-    // const data = await Promise.all(
-    //     nominationsInfo.map(async nominationInfo => {
-    //         const nomination = await google.getNomination(nominationInfo.driveId)
-
-            const photos = await google.getPhotos(nominationsInfo[1].driveId)
-
-            console.log(photos)
-            // const photos = await Promise.all(
-            //     nomination.photosId.map(async photoId => {
-            //         const photo = await google.getPhoto(photoId);
-            //         await delay(2000);
-            //         return photo;
-            //     })
-            // )
-            // return {
+    const data = await Promise.all(
+        nominationsInfo.map(async nominationInfo => {
+            const nomination = await google.getNomination(nominationInfo.driveId)
+            
+            const photos = [];
+            for(const photoId of nomination.photosId) {
+                const photo = await google.getPhoto(photoId);
+                await delay(500);
+                photos.push(photo)
+            }
+            // await mongodb.addDocumentToCollection(seasonId, 'nominations', {
             //     name: nominationInfo.name,
             //     id: nominationInfo.id,
             //     photos: photos
-            // }
-    //     })
-    // )
-    // console.log(data);
-    
-    console.log('End');
+            // })
+            return {
+                name: nominationInfo.name,
+                id: nominationInfo.id,
+                photos: photos
+            }
+        })
+    )
 
+    return data;
 }
 
-setNominations('asdas');
+const setParticipants = async (seasonId, nominations) => {
+
+    let participants = {}
+
+    nominations.map(nomination => {
+        nomination.photos.map(photo => {
+            let participantName = photo.name.split('.jpg')[0];
+            if(!participants[participantName]){
+                participants[participantName] = {
+                    id: participantName,
+                    nominations: {}
+                }
+            }
+            if(!participants[participantName].nominations[nomination.id]){
+                participants[participantName].nominations[nomination.id] = {}
+            }
+            participants[participantName].nominations[nomination.id].photo = photo;
+        })
+    })
+    let data = await Promise.all(Object.keys(participants).map(async participantId => {
+       let participant = await mongodb.addDocumentToCollection(seasonId, 'participants', participants[participantId])
+
+       return participant;
+    }))
+
+    return data;
+}
+
+
+
+create('1MmjutDdTs1b96J1KNRVmZszcmADMVE9z');

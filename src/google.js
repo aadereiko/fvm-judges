@@ -107,7 +107,7 @@ async function getNominations(id) {
     const drive = google.drive({ version: 'v2', auth });
 
     const folders = await drive.children.list({
-      folderId: '1MmjutDdTs1b96J1KNRVmZszcmADMVE9z'
+      folderId: id
     })
 
     let nominations = [];
@@ -137,26 +137,8 @@ async function getPhoto(photoId) {
     const drive = google.drive({ version: 'v2', auth });
     const photoName = await drive.files.get({
       fileId: photoId
-    });
+    }).then().catch(err => console.log(err));
 
-    return { name: photoName.data.title, link: photoName.data.thumbnailLink }
-  })
-
-  return data;
-}
-
-async function getPhotos(nominationId) {
-  const data = init(async function (auth) {
-    const drive = google.drive({ version: 'v2', auth });
-    const photoName = await drive.files.list({
-      driveId: nominationId,
-      fields: "name, link",
-      includeItemsFromAllDrives: true,
-      corpora: 'drive',
-      supportsAllDrives: true
-    });
-    console.log(photoName)
-    
     return { name: photoName.data.title, link: photoName.data.thumbnailLink }
   })
 
@@ -216,5 +198,4 @@ module.exports.getNominations = getNominations;
 module.exports.getNomination = getNomination;
 module.exports.getNominationName = getNominationName;
 module.exports.getPhoto = getPhoto;
-module.exports.getPhotos = getPhotos;
 module.exports.getPhotosId = getPhotosId;
