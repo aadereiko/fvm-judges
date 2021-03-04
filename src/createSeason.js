@@ -15,25 +15,28 @@ function delay(ms) {
 const setNominations = async (seasonId) => {
     const nominationsInfo = await google.getNominations('s');
 
-    const data = await Promise.all(
-        nominationsInfo.map(async nominationInfo => {
-            await delay(5000);
-            const nomination = await google.getNomination(nominationInfo.driveId)
-            const photos = await Promise.all(
-                nomination.photosId.map(async photoId => {
-                    const photo = await google.getPhoto(photoId);
-                    await delay(2000);
-                    return photo;
-                })
-            )
-            return {
-                name: nominationInfo.name,
-                id: nominationInfo.id,
-                photos: photos
-            }
-        })
-    )
-    console.log(data);
+    // const data = await Promise.all(
+    //     nominationsInfo.map(async nominationInfo => {
+    //         const nomination = await google.getNomination(nominationInfo.driveId)
+
+            const photos = await google.getPhotos(nominationsInfo[1].driveId)
+
+            console.log(photos)
+            // const photos = await Promise.all(
+            //     nomination.photosId.map(async photoId => {
+            //         const photo = await google.getPhoto(photoId);
+            //         await delay(2000);
+            //         return photo;
+            //     })
+            // )
+            // return {
+            //     name: nominationInfo.name,
+            //     id: nominationInfo.id,
+            //     photos: photos
+            // }
+    //     })
+    // )
+    // console.log(data);
     
     console.log('End');
 
