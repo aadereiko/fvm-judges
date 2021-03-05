@@ -10,13 +10,15 @@ export const ParticipantPhotoContainer = () => {
   const [photo, setPhoto] = useState();
 
   useEffect(() => {
-    fetch(`/api/google/photo/${participantId}`)
+    fetch(`
+      /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${nominationId}/participant/${participantId}
+    `)
       .then((response) => response.json())
       .then(({ name, link }) => {
         setPhoto({ name, link });
       })
       .catch((err) => console.log(err));
-    fetch(`/api/google/nomination/name/${nominationId}`)
+    fetch(`/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${nominationId}`)
       .then((response) => response.json())
       .then(({ name }) => {
         setNominationName(name);

@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
 // });
 
 app.get('/api/google/nominations', (req, res) => {
-  google.getNominations(res)
+  mongodb.getNominations(res)
 });
 
 app.get('/api/google/nomination/:id', (req, res) => {
@@ -56,9 +56,47 @@ app.get('/api/mongo', (req, res) => {
 
 app.get('/api/mongo/createSeason/:id', async (req, res) => {
   let seasonId = req.params.id;
-  
   let season = await mongodb.createSeason(seasonId)
   res.send({connect: "fine"})
+});
+
+app.get('/api/mongo/season/:id/nominations', async (req, res) => {
+  let seasonId = req.params.id;
+  let nominations = await mongodb.getNominations(seasonId)
+
+  res.send(nominations)
+});
+
+app.get('/api/mongo/season/:id/nomination/:nominationId', async (req, res) => {
+  let seasonId = req.params.id;
+  let nominationId = req.params.nominationId;
+  let nomination = await mongodb.getNomination(seasonId, nominationId)
+  
+  res.send(nomination)
+});
+
+app.get('/api/mongo/season/:id/participants', async (req, res) => {
+  let seasonId = req.params.id;
+  let participants = await mongodb.getParticipants(seasonId)
+
+  res.send(participants)
+});
+
+app.get('/api/mongo/season/:id/participant/:participantId', async (req, res) => {
+  let seasonId = req.params.id;
+  let participantId = req.params.participantId;
+  let participant = await mongodb.getParticipant(seasonId, participantId)
+  
+  res.send(participant)
+});
+
+app.get('/api/mongo/season/:id/nomination/:nominationId/participant/:participantId', async (req, res) => {
+  let seasonId = req.params.id;
+  let nominationId = req.params.nominationId;
+  let participantId = req.params.participantId;
+  let photo = await mongodb.getPhoto(seasonId, nominationId, participantId);
+  
+  res.send(photo)
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

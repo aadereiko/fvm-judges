@@ -27,11 +27,11 @@ const setNominations = async (seasonId) => {
                 await delay(500);
                 photos.push(photo)
             }
-            // await mongodb.addDocumentToCollection(seasonId, 'nominations', {
-            //     name: nominationInfo.name,
-            //     id: nominationInfo.id,
-            //     photos: photos
-            // })
+            await mongodb.addDocumentToCollection(seasonId, 'nominations', {
+                name: nominationInfo.name,
+                id: nominationInfo.id,
+                photos: photos
+            })
             return {
                 name: nominationInfo.name,
                 id: nominationInfo.id,
@@ -49,7 +49,7 @@ const setParticipants = async (seasonId, nominations) => {
 
     nominations.map(nomination => {
         nomination.photos.map(photo => {
-            let participantName = photo.name.split('.jpg')[0];
+            let participantName = +photo.name.split('.jpg')[0].split('_')[0];
             if(!participants[participantName]){
                 participants[participantName] = {
                     id: participantName,
@@ -57,9 +57,11 @@ const setParticipants = async (seasonId, nominations) => {
                 }
             }
             if(!participants[participantName].nominations[nomination.id]){
-                participants[participantName].nominations[nomination.id] = {}
+                participants[participantName].nominations[nomination.id] = {
+                    photo: []
+                }
             }
-            participants[participantName].nominations[nomination.id].photo = photo;
+            participants[participantName].nominations[nomination.id].photo.push(photo);
         })
     })
     let data = await Promise.all(Object.keys(participants).map(async participantId => {
@@ -73,4 +75,4 @@ const setParticipants = async (seasonId, nominations) => {
 
 
 
-create('1MmjutDdTs1b96J1KNRVmZszcmADMVE9z');
+create('1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk');

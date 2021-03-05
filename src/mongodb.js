@@ -77,15 +77,68 @@ const addDocumentToCollection = async (dbName, collectionName, document) => {
     return data;
 }
 
-// async function test() {
-//     addDocumentToCollection('asdasd','users',{id:1, name: 'sasdasd'})
-// }
+const getNominations = async (dbName) => {
+    let data = await connectDB(async (client) => {
+        let collection = await client.db(dbName).collection('nominations').find({}).toArray();
+
+        return collection;
+    })
+    
+    return data || {};
+}
+
+const getNomination = async (dbName, id) => {
+    let data = await connectDB(async (client) => {
+        let collection = await client.db(dbName).collection('nominations').findOne({id: +id});
+
+        return collection;
+    })
+
+    return data || {};
+}
+
+
+const getParticipants = async (dbName) => {
+    let data = await connectDB(async (client) => {
+        let collection = await client.db(dbName).collection('participants').find({}).toArray();
+
+        return collection;
+    })
+    
+    return data || {};
+}
+
+const getParticipant = async (dbName, id) => {
+    let data = await connectDB(async (client) => {
+        let collection = await client.db(dbName).collection('participants').findOne({id: +id});
+
+        return collection;
+    })
+
+    return data || {};
+}
+
+const getPhoto = async (dbName, nominationId, participantId) => {
+    let nomination = await getNomination(dbName, nominationId);
+    let photo = nomination.photos.filter(photo => photo.name.split('_')[0] == participantId)[0];
+
+    return photo || {};
+}
+
+async function test() {
+    getParticipant('1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk', 5);
+}
 
 // test()
 
 module.exports.connectDB = connectDB;
 module.exports.createSeason = createSeason;
 module.exports.addDocumentToCollection = addDocumentToCollection;
+module.exports.getNomination = getNomination;
+module.exports.getNominations = getNominations;
+module.exports.getParticipant = getParticipant;
+module.exports.getParticipants = getParticipants;
+module.exports.getPhoto = getPhoto;
 
 let participant = {
     id: 1,
