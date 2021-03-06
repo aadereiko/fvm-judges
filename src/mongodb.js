@@ -125,9 +125,9 @@ const getPhoto = async (dbName, nominationId, participantId) => {
     return photo || {};
 }
 
-async function test() {
-    getParticipant('1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk', 5);
-}
+// async function test() {
+//     getParticipant('1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk', 5);
+// }
 
 // test()
 

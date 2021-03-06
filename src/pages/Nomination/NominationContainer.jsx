@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { NOMINATIONS } from '../../mock';
-import { PARTICIPANTS } from '../../mock/participants';
 import { Nomination } from './Nomination';
 
 export const NominationContainer = () => {

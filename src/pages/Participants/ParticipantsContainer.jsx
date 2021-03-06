@@ -1,6 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Participants } from './Participants';
 
 export const ParticipantsContainer = () => {
-  return <Participants />;
+  const [participants, setParticipants] = useState([]);
+  const [nominations, setNominations] = useState([]);
+  useEffect(() => {
+    fetch('/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nominations')
+      .then((response) => response.json())
+      .then((data) => {
+        data.sort((a, b) => b.id - a.id);
+        setNominations(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  useEffect(() => {
+    fetch('/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/participants')
+      .then((response) => response.json())
+      .then((data) => {
+        data.sort((a, b) => a.id - b.id);
+        setParticipants(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  return <Participants participants={participants} nominations={nominations} />;
 };

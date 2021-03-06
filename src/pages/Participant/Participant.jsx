@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   ParticipantTitleElement,
   ParticipantWrapperElement,
@@ -6,18 +6,15 @@ import {
   CardElement,
 } from './elements';
 import PropTypes from 'prop-types';
-import { PARTICIPANTS } from '../../mock/participants';
 import { Card } from 'react-bootstrap';
-import { NOMINATIONS } from '../../mock';
 import { Link } from 'react-router-dom';
 
-const getNominationId = (photo) => {
-  let name = photo.name.split('_');
-  return name[name.length - 1].split('.JPG')[0];
-};
+// const getNominationId = (photo) => {
+//   let name = photo.name.toLowerCase().split('_');
+//   return name[name.length - 1].split('.jpg')[0];
+// };
 
 export const Participant = ({ id, participant }) => {
-  const currentParticipant = useMemo(() => PARTICIPANTS[id], [id]);
   console.log(participant);
   return (
     <ParticipantWrapperElement>
@@ -40,12 +37,7 @@ export const Participant = ({ id, participant }) => {
                   {/* <Card.Subtitle className="mb-2 text-muted">
                     Оценка: {currentParticipant.nominations[nominationId].mark || '-'}
                   </Card.Subtitle> */}
-                  <Card.Link
-                    as={Link}
-                    to={`/nominations/${getNominationId(
-                      participant.nominations[nominationKey].photo[0],
-                    )}`}
-                  >
+                  <Card.Link as={Link} to={`/nominations/${nominationKey}`}>
                     Номинация
                   </Card.Link>
                   <br></br>
