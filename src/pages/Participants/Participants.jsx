@@ -7,7 +7,7 @@ import { ParticipantsWrapperElement } from './elements';
 import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-square.svg';
 import { Link } from 'react-router-dom';
 
-export const Participants = ({ participants, nominations }) => {
+export const Participants = ({ participants, nominations, isLoading }) => {
   participants.map((participant) =>
     nominations.map((nomination) => {
       if (participant.nominations[nomination.id]) {
@@ -20,38 +20,40 @@ export const Participants = ({ participants, nominations }) => {
   return (
     <ParticipantsWrapperElement>
       <h3>Участники </h3>
-      <Table hover bordered responsive striped size="sm">
-        <thead>
-          <tr>
-            <th>№</th>
-            {nominations.map(({ name, id }) => (
-              <th key={id}>{name}</th>
-            ))}
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {participants.map((participant) => (
-            <tr key={participant.id}>
-              <td>{participant.id}</td>
-              {nominations.map((nomination) =>
-                participant.nominations[nomination.id] ? (
-                  <td key={`${participant.id}-${nomination.id}`}>
-                    {participant.nominations[nomination.id].mark || '-'}
-                  </td>
-                ) : (
-                  <td key={`${participant.id}-${nomination.id}`}>NO</td>
-                ),
-              )}
-              <td>
-                <Link to={`participants/${participant.id}`}>
-                  <ArrowIcon />
-                </Link>
-              </td>
+      {(isLoading && 'Загрузка...') || (
+        <Table hover bordered responsive striped size="sm">
+          <thead>
+            <tr>
+              <th>№</th>
+              {nominations.map(({ name, id }) => (
+                <th key={id}>{name}</th>
+              ))}
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {participants.map((participant) => (
+              <tr key={participant.id}>
+                <td>{participant.id}</td>
+                {nominations.map((nomination) =>
+                  participant.nominations[nomination.id] ? (
+                    <td key={`${participant.id}-${nomination.id}`}>
+                      {participant.nominations[nomination.id].mark || '-'}
+                    </td>
+                  ) : (
+                    <td key={`${participant.id}-${nomination.id}`}>NO</td>
+                  ),
+                )}
+                <td>
+                  <Link to={`participants/${participant.id}`}>
+                    <ArrowIcon />
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </ParticipantsWrapperElement>
   );
 };
@@ -59,4 +61,5 @@ export const Participants = ({ participants, nominations }) => {
 Participants.propTypes = {
   participants: PropTypes.arrayOf(participantPropType).isRequired,
   nominations: PropTypes.arrayOf(nominationPropType).isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
