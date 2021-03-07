@@ -6,15 +6,18 @@ export const NominationContainer = () => {
   const { id } = useParams();
   const [name, setName] = useState('');
   const [photos, setPhotos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     fetch(`/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setName(data.name);
         setPhotos(data.photos);
+        setIsLoading(false);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [setIsLoading]);
 
   // const nomination = useMemo(() => NOMINATIONS[id - 1], [id]);
   // const photos = useMemo(
@@ -25,5 +28,5 @@ export const NominationContainer = () => {
   //     })),
   //   [id],
   // );
-  return <Nomination name={name} id={id} photos={photos} />;
+  return <Nomination name={name} id={id} photos={photos} isLoading={isLoading} />;
 };

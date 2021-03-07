@@ -4,7 +4,7 @@ import { NominationWrapperElement, CardElement, PhotosWrapperElement } from './e
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-export const Nomination = ({ name, id, photos }) => {
+export const Nomination = ({ name, id, photos, isLoading }) => {
   // const [allPhotos, setAllPhotos] = useState({});
   // useEffect(() => {
   //   photos.map((item) => {
@@ -19,29 +19,33 @@ export const Nomination = ({ name, id, photos }) => {
   return (
     <NominationWrapperElement>
       <h3>{name}</h3>
-      <h4 className="text-muted">Фото: </h4>
-      <PhotosWrapperElement>
-        {photos.map((photo) => (
-          <CardElement
-            key={photo.name}
-            // bg={photo.mark ? 'light' : 'dark'}
-            // text={photo.mark ? 'dark' : 'light'}
-          >
-            <Card.Img variant="top" src={photo.link} />
-            <Card.Body>
-              <Card.Title>Участник {photo.name.split('_')[0]}</Card.Title>
-              {/* <Card.Subtitle className="mb-2 text-muted">Оценка: {photo.mark || '-'}</Card.Subtitle> */}
-              <Card.Link as={Link} to={`/participants/${photo.name.split('_')[0]}`}>
-                Участник
-              </Card.Link>
-              <br></br>
-              <Card.Link as={Link} to={`/photos/${id}/${photo.name.split('_')[0]}`}>
+      {(isLoading && 'Загрузка...') || (
+        <>
+          <h4 className="text-muted">Фото: </h4>
+          <PhotosWrapperElement>
+            {photos.map((photo) => (
+              <CardElement
+                key={photo.name}
+                // bg={photo.mark ? 'light' : 'dark'}
+                // text={photo.mark ? 'dark' : 'light'}
+              >
+                <Card.Img variant="top" src={photo.link} />
+                <Card.Body>
+                  <Card.Title>Участник {photo.name.split('_')[0]}</Card.Title>
+                  {/* <Card.Subtitle className="mb-2 text-muted">Оценка: {photo.mark || '-'}</Card.Subtitle> */}
+                  <Card.Link as={Link} to={`/participants/${photo.name.split('_')[0]}`}>
+                    Участник
+                  </Card.Link>
+                  <br></br>
+                  {/* <Card.Link as={Link} to={`/photos/${id}/${photo.name.split('_')[0]}`}>
                 Оценить
-              </Card.Link>
-            </Card.Body>
-          </CardElement>
-        ))}
-      </PhotosWrapperElement>
+              </Card.Link> */}
+                </Card.Body>
+              </CardElement>
+            ))}
+          </PhotosWrapperElement>
+        </>
+      )}
     </NominationWrapperElement>
   );
 };
@@ -56,4 +60,5 @@ Nomination.propTypes = {
       participantId: PropTypes.number.isRequired,
     }),
   ).isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
