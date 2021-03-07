@@ -13,7 +13,7 @@ import {
   ArrowRightIconElement,
 } from './elements';
 import { photoPropType } from '../../shared/propTypes';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const getMarkStar = (currentMark, setMark, section, clickCallback = () => {}) => {
@@ -32,14 +32,13 @@ const getMarkStar = (currentMark, setMark, section, clickCallback = () => {}) =>
 };
 
 const getFullImage = (photoLink) => {
-  return photoLink.split('=s220')[0];
+  return (photoLink && photoLink.split('=s220')[0]) || '';
 };
 
 export const ParticipantPhoto = ({ participantId, nominationId, nominationName, photo }) => {
   const marks = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
-  const [showPicture, setShowPicture] = useState(false);
-  const [look, setLook] = useState(1);
-  const [idea, setIdea] = useState(1);
+  const [look, setLook] = useState((photo && photo.mark) || 0);
+  const [idea, setIdea] = useState((photo && photo.mark) || 0);
 
   return (
     (photo && (

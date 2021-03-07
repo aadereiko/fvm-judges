@@ -4,7 +4,7 @@ import { nominationPropType } from '../../shared/propTypes/nominations';
 import { participantPropType } from '../../shared/propTypes/participants';
 import { Table } from 'react-bootstrap';
 import { ParticipantsWrapperElement } from './elements';
-import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-square.svg';
+import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-circle.svg';
 import { Link } from 'react-router-dom';
 
 export const Participants = ({ participants, nominations, isLoading }) => {
@@ -46,7 +46,7 @@ export const Participants = ({ participants, nominations, isLoading }) => {
                 )}
                 <td>
                   <Link to={`participants/${participant.id}`}>
-                    <ArrowIcon />
+                    <ArrowIcon fill="black" />
                   </Link>
                 </td>
               </tr>

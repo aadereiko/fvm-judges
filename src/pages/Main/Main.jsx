@@ -1,18 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { APP_COLORS } from '../../shared';
 import { HeaderContainer } from './Header';
-import { ParticipantsContainer } from '../Participants';
-import { ParticipantContainer } from '../Participant';
-import { NominationsContainer } from '../Nominations';
-import { NominationContainer } from '../Nomination';
-import { ParticipantPhotoContainer } from '../ParticipantPhoto';
+import { generateRoutes } from './routerConfig';
+import { useAuthState } from '../../contexts';
+import { Footer } from './Footer/Footer';
 
 const ContentElement = styled.div`
   background-color: ${APP_COLORS.SUPER_LIGHT_GRAY};
-  min-height: calc(100% - 58px);
+  min-height: calc(100% - 58px - 58px);
   width: 100%;
 `;
 
@@ -21,30 +19,21 @@ const RouterWrapperElement = styled.div`
   margin-left: 10%;
   // look up why margin doesnt work
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 2px;
 `;
 
 export const Main = () => {
+  const { isLoggedIn } = useAuthState();
   return (
-    <>
-      <Router>
-        <HeaderContainer />
-        <ContentElement>
-          <RouterWrapperElement>
-            <Switch>
-              <Route path="/participants" exact component={ParticipantsContainer} />
-              <Route path="/participants/:id" exact component={ParticipantContainer} />
-              <Route path="/nominations" exact component={NominationsContainer} />
-              <Route path="/nominations/:id" exact component={NominationContainer} />
-              <Route
-                path="/photos/:nominationId/:participantId"
-                exact
-                component={ParticipantPhotoContainer}
-              />
-            </Switch>
-          </RouterWrapperElement>
-        </ContentElement>
-      </Router>
-    </>
+    <Router>
+      {isLoggedIn && <HeaderContainer />}
+      <ContentElement>
+        <RouterWrapperElement>
+          <Switch>{generateRoutes(isLoggedIn)}</Switch>
+        </RouterWrapperElement>
+      </ContentElement>
+      <div>{isLoggedIn}</div>
+      {isLoggedIn && <Footer />}
+    </Router>
   );
 };
