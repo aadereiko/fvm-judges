@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ParticipantTitleElement,
   ParticipantWrapperElement,
@@ -9,13 +9,24 @@ import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-// const getNominationId = (photo) => {
-//   let name = photo.name.toLowerCase().split('_');
-//   return name[name.length - 1].split('.jpg')[0];
-// };
-
 export const Participant = ({ id, participant, isLoading }) => {
-  console.log(participant);
+  const [photos, setPhotos] = useState({});
+  const getPhotoLink = async (photoId) => {
+    fetch(`
+      /api/google/photo/${photoId}
+    `)
+      .then((response) => response.json())
+      .then(({ name, link, id }) => {
+        setPhotos((prevState) => ({ ...prevState, [name]: { name, link, id } }));
+        console.log(123, photos);
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    Object.keys(participant.nominations).map((nominationKey) =>
+      participant.nominations[nominationKey].photo.map((photo, index) => getPhotoLink(photo.id)),
+    );
+  }, []);
   return (
     <ParticipantWrapperElement>
       <h3>Участник {id}</h3>
@@ -32,7 +43,11 @@ export const Participant = ({ id, participant, isLoading }) => {
                     // text={currentParticipant.nominations[nominationId].mark ? 'dark' : 'light'}
                   >
                     {participant.nominations[nominationKey].photo.map((photo, index) => (
-                      <Card.Img variant="top" src={photo.link} key={index} />
+                      <Card.Img
+                        variant="top"
+                        src={photos[photo.name] ? photos[photo.name].link : ''}
+                        key={index}
+                      />
                     ))}
                     <Card.Body>
                       <Card.Title>{nominationKey}</Card.Title>

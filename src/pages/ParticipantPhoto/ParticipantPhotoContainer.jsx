@@ -13,7 +13,7 @@ export const ParticipantPhotoContainer = () => {
     `)
       .then((response) => response.json())
       .then(({ name, link }) => {
-        setPhoto({ name, link });
+        setPhoto({ name, link, id });
       })
       .catch((err) => console.log(err));
     fetch(`/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${nominationId}`)

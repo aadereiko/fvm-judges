@@ -133,13 +133,13 @@ async function getNominations(id) {
 }
 
 async function getPhoto(photoId) {
-  const data = init(async function (auth) {
+  const data = await init(async function (auth) {
     const drive = google.drive({ version: 'v2', auth });
     const photoName = await drive.files.get({
       fileId: photoId
     }).then().catch(err => console.log(err));
 
-    return { name: photoName.data.title, link: photoName.data.thumbnailLink }
+    return { name: photoName.data.title, link: photoName.data.thumbnailLink, id: photoId }
   })
 
   return data;

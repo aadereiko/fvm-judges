@@ -37,10 +37,11 @@ app.get('/api/google/nomination/name/:id', (req, res) => {
   google.getNominationName(res, nominationsId);
 });
 
-app.get('/api/google/photo/:id', (req, res) => {
+app.get('/api/google/photo/:id', async (req, res) => {
   let photoId = req.params.id;
-  
-  google.getPhoto(res, photoId);
+  let photo = await google.getPhoto(photoId);
+
+  res.send(photo);
 })
 
 app.get('/api/google/photos/:id', (req, res) => {
@@ -94,10 +95,13 @@ app.get('/api/mongo/season/:id/nomination/:nominationId/participant/:participant
   let seasonId = req.params.id;
   let nominationId = req.params.nominationId;
   let participantId = req.params.participantId;
-  let photo = await mongodb.getPhoto(seasonId, nominationId, participantId);
+  let mongoPhoto = await mongodb.getPhoto(seasonId, nominationId, participantId);
+  console.log(mongoPhoto)
+  let photo = await google.getPhoto(mongoPhoto.id)
   
   res.send(photo)
 });
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
