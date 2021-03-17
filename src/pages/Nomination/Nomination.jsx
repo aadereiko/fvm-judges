@@ -5,17 +5,20 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 export const Nomination = ({ name, id, photos, isLoading }) => {
-  // const [allPhotos, setAllPhotos] = useState({});
-  // useEffect(() => {
-  //   photos.map((item) => {
-  //     fetch(`/api/google/photo/${item}`)
-  //       .then((response) => response.json())
-  //       .then(({ name, link }) => {
-  //         setAllPhotos((prevState) => ({ ...prevState, [item]: { name, link } }));
-  //       })
-  //       .catch((err) => console.log(err));
-  //   });
-  // }, [photos]);
+  const [nominationPhotos, setPhotos] = useState({});
+  const getPhotoLink = async (photoId) => {
+    fetch(`
+      /api/google/photo/${photoId}
+    `)
+      .then((response) => response.json())
+      .then(({ name, link, id }) => {
+        setPhotos((prevState) => ({ ...prevState, [name]: { name, link, id } }));
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    photos.map((photo) => getPhotoLink(photo.id));
+  }, [photos]);
   return (
     <NominationWrapperElement>
       <h3>{name}</h3>
@@ -29,7 +32,10 @@ export const Nomination = ({ name, id, photos, isLoading }) => {
                 // bg={photo.mark ? 'light' : 'dark'}
                 // text={photo.mark ? 'dark' : 'light'}
               >
-                <Card.Img variant="top" src={photo.link} />
+                <Card.Img
+                  variant="top"
+                  src={nominationPhotos[photo.name] ? nominationPhotos[photo.name].link : ''}
+                />
                 <Card.Body>
                   <Card.Title>Участник {photo.name.split('_')[0]}</Card.Title>
                   {/* <Card.Subtitle className="mb-2 text-muted">Оценка: {photo.mark || '-'}</Card.Subtitle> */}
@@ -37,9 +43,9 @@ export const Nomination = ({ name, id, photos, isLoading }) => {
                     Участник
                   </Card.Link>
                   <br></br>
-                  {/* <Card.Link as={Link} to={`/photos/${id}/${photo.name.split('_')[0]}`}>
-                Оценить
-              </Card.Link> */}
+                  <Card.Link as={Link} to={`/photos/${id}/${photo.name.split('_')[0]}`}>
+                    Оценить
+                  </Card.Link>
                 </Card.Body>
               </CardElement>
             ))}

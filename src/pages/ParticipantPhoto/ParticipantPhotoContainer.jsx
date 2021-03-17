@@ -6,13 +6,14 @@ export const ParticipantPhotoContainer = () => {
   const { participantId, nominationId } = useParams({});
   const [nominationName, setNominationName] = useState('');
   const [photo, setPhoto] = useState();
+  const [mark, setMark] = useState({});
 
   useEffect(() => {
     fetch(`
       /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${nominationId}/participant/${participantId}
     `)
       .then((response) => response.json())
-      .then(({ name, link }) => {
+      .then(({ name, link, id }) => {
         setPhoto({ name, link, id });
       })
       .catch((err) => console.log(err));
@@ -20,6 +21,14 @@ export const ParticipantPhotoContainer = () => {
       .then((response) => response.json())
       .then(({ name }) => {
         setNominationName(name);
+      })
+      .catch((err) => console.log(err));
+    fetch(`
+      /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/user/admin/${nominationId}/${participantId}
+    `)
+      .then((response) => response.json())
+      .then((mark) => {
+        setMark(mark);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -42,6 +51,7 @@ export const ParticipantPhotoContainer = () => {
       participantId={participantId}
       nominationId={nominationId}
       photo={photo}
+      mark={mark}
       nominationName={nominationName}
     />
   );

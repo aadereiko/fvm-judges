@@ -96,12 +96,44 @@ app.get('/api/mongo/season/:id/nomination/:nominationId/participant/:participant
   let nominationId = req.params.nominationId;
   let participantId = req.params.participantId;
   let mongoPhoto = await mongodb.getPhoto(seasonId, nominationId, participantId);
-  console.log(mongoPhoto)
   let photo = await google.getPhoto(mongoPhoto.id)
+  console.log(photo)
   
   res.send(photo)
 });
 
+app.get('/api/mongo/season/:id/user/:login', async (req, res) => {
+  let seasonId = req.params.id;
+  let login = req.params.login;
+  let user = await mongodb.getUser(seasonId, login);
+  
+  res.send(user)
+});
+
+app.get('/api/mongo/season/:id/user/:login/:nominationId/:participantId', async (req, res) => {
+  let seasonId = req.params.id;
+  let login = req.params.login;
+  let nominationId = req.params.nominationId;
+  let participantId = req.params.participantId;
+  let user = await mongodb.getUser(seasonId, login);
+  console.log(user.marks[nominationId][participantId])
+  res.send(user.marks[nominationId][participantId])
+});
+
+
+app.get('/api/mongo/season/:id/user/:login/notmarked', async (req, res) => {
+  let seasonId = req.params.id;
+  let login = req.params.login;
+  let user = await mongodb.getUser(seasonId, login);
+  let notmarked = Object.keys(user.marks).map(nomId => {
+    let notMarked = Object.keys(user.marks[nomId]).filter(nom => nom.idea == null || nom.look == null)
+    return { 
+      nomination : nomId,
+      notMarked: notMarked
+    }
+  })
+  res.send(notmarked)
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

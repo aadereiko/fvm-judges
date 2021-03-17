@@ -125,6 +125,16 @@ const getPhoto = async (dbName, nominationId, participantId) => {
     return photo || {};
 }
 
+const getUser= async (dbName, login) => {
+    let data = await connectDB(async (client) => {
+        let collection = await client.db(dbName).collection('users').findOne({login: login});
+
+        return collection;
+    })
+
+    return data || {};
+}
+
 // async function test() {
 //     getParticipant('1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk', 5);
 // }
@@ -139,6 +149,7 @@ module.exports.getNominations = getNominations;
 module.exports.getParticipant = getParticipant;
 module.exports.getParticipants = getParticipants;
 module.exports.getPhoto = getPhoto;
+module.exports.getUser = getUser;
 
 let participant = {
     id: 1,

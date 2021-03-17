@@ -8,15 +8,6 @@ import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-dow
 import { Link } from 'react-router-dom';
 
 export const Participants = ({ participants, nominations, isLoading }) => {
-  participants.map((participant) =>
-    nominations.map((nomination) => {
-      if (participant.nominations[nomination.id]) {
-        console.log(`${participant.id}-${nomination.id}`);
-      } else {
-        console.log(`${participant.id}-${nomination.id}`);
-      }
-    }),
-  );
   return (
     <ParticipantsWrapperElement>
       <h3>Участники </h3>

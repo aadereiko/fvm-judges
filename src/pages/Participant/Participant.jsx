@@ -18,13 +18,12 @@ export const Participant = ({ id, participant, isLoading }) => {
       .then((response) => response.json())
       .then(({ name, link, id }) => {
         setPhotos((prevState) => ({ ...prevState, [name]: { name, link, id } }));
-        console.log(123, photos);
       })
       .catch((err) => console.log(err));
   };
   useEffect(() => {
     Object.keys(participant.nominations).map((nominationKey) =>
-      participant.nominations[nominationKey].photo.map((photo, index) => getPhotoLink(photo.id)),
+      participant.nominations[nominationKey].photo.map((photo) => getPhotoLink(photo.id)),
     );
   }, []);
   return (

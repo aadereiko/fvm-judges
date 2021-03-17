@@ -35,11 +35,10 @@ const getFullImage = (photoLink) => {
   return (photoLink && photoLink.split('=s220')[0]) || '';
 };
 
-export const ParticipantPhoto = ({ participantId, nominationId, nominationName, photo }) => {
+export const ParticipantPhoto = ({ participantId, nominationId, nominationName, photo, mark }) => {
   const marks = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
-  const [look, setLook] = useState((photo && photo.mark) || 0);
-  const [idea, setIdea] = useState((photo && photo.mark) || 0);
-
+  const [look, setLook] = useState((mark && mark.look) || 0);
+  const [idea, setIdea] = useState((mark && mark.idea) || 0);
   return (
     (photo && (
       <ParticipantPhotoWrapperElement>
@@ -87,4 +86,5 @@ ParticipantPhoto.propTypes = {
   nominationId: PropTypes.string.isRequired,
   photo: photoPropType,
   nominationName: PropTypes.string.isRequired,
+  mark: PropTypes.object,
 };
