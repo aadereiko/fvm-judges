@@ -4,7 +4,7 @@ import { InstagramIconElement, NavbarElement, TelegramIconElement } from './elem
 
 export const Footer = () => {
   return (
-    <div>
+    <footer>
       <NavbarElement className="justify-content-center" bg="gray">
         <Nav>
           <Nav.Link
@@ -24,6 +24,6 @@ export const Footer = () => {
           </Nav.Link>
         </Nav>
       </NavbarElement>
-    </div>
+    </footer>
   );
 };

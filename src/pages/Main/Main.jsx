@@ -8,7 +8,7 @@ import { generateRoutes } from './routerConfig';
 import { useAuthState } from '../../contexts';
 import { Footer } from './Footer/Footer';
 
-const ContentElement = styled.div`
+const ContentElement = styled.main`
   background-color: ${APP_COLORS.SUPER_LIGHT_GRAY};
   min-height: calc(100% - 58px - 58px);
   width: 100%;
