@@ -53,7 +53,7 @@ export const Home = () => {
           оценки до 10 утра среды
         </p>
       </CardElement>
-      <Button as={Link} to="/photos/1/0" variant="dark">
+      <Button variant="dark" disabled>
         Начать оценивать
       </Button>
     </HomeWrapperElement>

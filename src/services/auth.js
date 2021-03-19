@@ -23,11 +23,10 @@ class AuthService {
     if (username === 'user') {
       this._setUserToken(username);
       this.isLoggedIn = true;
-    } else {
-      console.warn('[Auth Service] Not valid username');
+      return this._users[0];
     }
-
-    return this._users[0];
+    console.warn('[Auth Service] Not valid username');
+    return null;
   }
 
   logout() {

@@ -34,12 +34,11 @@ export const Participant = ({ id, participant, isLoading }) => {
           <ParticipantTitleElement className="text-muted">Фото:</ParticipantTitleElement>
           <PhotosWrapperElement>
             {Object.keys(participant.nominations).map((nominationKey) => (
-              <>
+              <React.Fragment key={nominationKey}>
                 {nominationKey != '0' && (
                   <CardElement
-                    key={nominationKey}
-                    // bg={currentParticipant.nominations[nominationId].mark ? 'light' : 'dark'}
-                    // text={currentParticipant.nominations[nominationId].mark ? 'dark' : 'light'}
+                  // bg={currentParticipant.nominations[nominationId].mark ? 'light' : 'dark'}
+                  // text={currentParticipant.nominations[nominationId].mark ? 'dark' : 'light'}
                   >
                     {participant.nominations[nominationKey].photo.map((photo, index) => (
                       <Card.Img
@@ -57,13 +56,13 @@ export const Participant = ({ id, participant, isLoading }) => {
                         Номинация
                       </Card.Link>
                       <br></br>
-                      {/* <Card.Link as={Link} to={`/photos/${nominationId}/${id}`}>
+                      <Card.Link as={Link} to={`/photos/${nominationKey}/${id}`}>
                         Оценить
-                      </Card.Link> */}
+                      </Card.Link>
                     </Card.Body>
                   </CardElement>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </PhotosWrapperElement>
         </>

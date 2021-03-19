@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { NominationWrapperElement, CardElement, PhotosWrapperElement } from './elements';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { photoPropType } from '../../shared/propTypes';
 
 export const Nomination = ({ name, id, photos, isLoading }) => {
   const [nominationPhotos, setPhotos] = useState({});
@@ -58,13 +59,7 @@ export const Nomination = ({ name, id, photos, isLoading }) => {
 
 Nomination.propTypes = {
   name: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
-  photos: PropTypes.arrayOf(
-    PropTypes.shape({
-      mark: PropTypes.number.isRequired,
-      img: PropTypes.string.isRequired,
-      participantId: PropTypes.number.isRequired,
-    }),
-  ).isRequired,
+  id: PropTypes.string.isRequired,
+  photos: PropTypes.arrayOf(photoPropType).isRequired,
   isLoading: PropTypes.bool.isRequired,
 };

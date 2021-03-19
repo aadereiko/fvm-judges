@@ -5,7 +5,7 @@ import { Dropdown, Nav, Navbar, DropdownButton, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { NavbarElement } from './elements';
 
-export const Header = ({ name, onLogout, notMarked }) => {
+export const Header = ({ name, onLogout }) => {
   return (
     <div>
       <NavbarElement bg="gray">
@@ -21,11 +21,12 @@ export const Header = ({ name, onLogout, notMarked }) => {
           </Nav.Link>
         </Nav>
         <Button
-          as={Link}
-          to={
-            notMarked[0] ? `/photos/${notMarked[0].nomination}/${notMarked[0].notMarked[0]}` : '#'
-          }
+          // as={Link}
+          // to={
+          //   notMarked[0] ? `/photos/${notMarked[0].nomination}/${notMarked[0].notMarked[0]}` : '#'
+          // }
           variant="dark"
+          disabled
         >
           Оценивать
         </Button>
@@ -40,5 +41,5 @@ export const Header = ({ name, onLogout, notMarked }) => {
 Header.propTypes = {
   name: PropTypes.string.isRequired,
   onLogout: PropTypes.func.isRequired,
-  notMarked: PropTypes.object,
+  // notMarked: PropTypes.arrayOf(PropTypes.object),
 };

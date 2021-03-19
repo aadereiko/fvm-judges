@@ -7,6 +7,9 @@ export const ParticipantPhotoContainer = () => {
   const [nominationName, setNominationName] = useState('');
   const [photo, setPhoto] = useState();
   const [mark, setMark] = useState({});
+  const [isLoadingNomination, setIsLoadingNomination] = useState(true);
+  const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
+  const [isLoadingMark, setIsLoadingMark] = useState(true);
 
   useEffect(() => {
     fetch(`
@@ -15,22 +18,34 @@ export const ParticipantPhotoContainer = () => {
       .then((response) => response.json())
       .then(({ name, link, id }) => {
         setPhoto({ name, link, id });
+        setIsLoadingPhoto(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsLoadingPhoto(false);
+      });
     fetch(`/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${nominationId}`)
       .then((response) => response.json())
       .then(({ name }) => {
         setNominationName(name);
+        setIsLoadingNomination(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsLoadingNomination(false);
+      });
     fetch(`
       /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/user/admin/${nominationId}/${participantId}
     `)
       .then((response) => response.json())
       .then((mark) => {
         setMark(mark);
+        setIsLoadingMark(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsLoadingMark(false);
+      });
   }, []);
 
   // const nominationName = useMemo(
@@ -53,6 +68,7 @@ export const ParticipantPhotoContainer = () => {
       photo={photo}
       mark={mark}
       nominationName={nominationName}
+      isLoading={isLoadingMark || isLoadingNomination || isLoadingPhoto}
     />
   );
 };
