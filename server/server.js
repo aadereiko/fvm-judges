@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const userRouter = require('./routes/user');
+const nominationRouter = require('./routes/nomination');
+const participantRouter = require('./routes/participant');
 const app = express();
 const port = process.env.PORT || 5000;
-
-console.log('port', port);
 
 const google = require('./google');
 const mongodb = require('./mongodb');
@@ -22,12 +22,17 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(userRouter);
+app.use(nominationRouter);
+app.use(participantRouter);
+
 // app.get('/api/google', (req, res) => {
 //   google.init(res)
 // });
 
 app.get('/api/google/nominations', (req, res) => {
   mongodb.getNominations(res);
+  res.send('Nominations got');
 });
 
 app.get('/api/google/nomination/:id', (req, res) => {
