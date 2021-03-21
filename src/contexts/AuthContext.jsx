@@ -50,24 +50,26 @@ export const AuthProvider = ({ children }) => {
     actions.login = login;
     actions.logout = logout;
 
-    const currentUser = authService.getCurrentUser();
-
-    if (currentUser) {
-      setAuthData((state) => ({
-        ...state,
-        status: 'success',
-        user: currentUser,
-        isLoggedIn: true,
-        actions,
-      }));
-    } else {
-      setAuthData((state) => ({
-        ...state,
-        status: 'success',
-        isLoggedIn: false,
-        actions,
-      }));
-    }
+    const fetchData = async () => {
+      const currentUser = await authService.getCurrentUser();
+      if (currentUser) {
+        setAuthData((state) => ({
+          ...state,
+          status: 'success',
+          user: currentUser,
+          isLoggedIn: true,
+          actions,
+        }));
+      } else {
+        setAuthData((state) => ({
+          ...state,
+          status: 'success',
+          isLoggedIn: false,
+          actions,
+        }));
+      }
+    };
+    fetchData();
   }, [setAuthData, login, logout]);
 
   return (

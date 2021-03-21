@@ -6,7 +6,7 @@ const { generateResponse } = require('../services/request');
 const auth = require('../middleware/auth');
 const router = express.Router();
 
-router.post('/users', async (req, res) => {
+router.post('/api/users', async (req, res) => {
   const user = new User(req.body);
 
   try {
@@ -17,7 +17,7 @@ router.post('/users', async (req, res) => {
   }
 });
 
-router.delete('/users/:id', async (req, res) => {
+router.delete('/api/users/:id', async (req, res) => {
   try {
     const id = req.params.id;
 
@@ -37,7 +37,7 @@ router.delete('/users/:id', async (req, res) => {
   }
 });
 
-router.post('/users/me', auth, async (req, res) => {
+router.get('/api/users/me', auth, async (req, res) => {
   try {
     res.send(generateResponse(req.user));
   } catch (e) {
@@ -45,7 +45,7 @@ router.post('/users/me', auth, async (req, res) => {
   }
 });
 
-router.post('/users/auth', async (req, res) => {
+router.post('/api/users/auth', async (req, res) => {
   try {
     if (!req.body.username) {
       return res.status(400).send(generateResponse(null, 'Не указан username'));
@@ -63,7 +63,7 @@ router.post('/users/auth', async (req, res) => {
   }
 });
 
-router.get('/users', async (req, res) => {
+router.get('/api/users', async (req, res) => {
   try {
     const users = await User.find({});
     res.send(generateResponse(users || []));

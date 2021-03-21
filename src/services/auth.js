@@ -1,3 +1,5 @@
+import { requestAPI } from './request';
+
 const TOKEN_KEY = 'FVM_TOKEN';
 
 class AuthService {
@@ -7,24 +9,23 @@ class AuthService {
     this.isLoggedIn = !!this._token;
   }
 
-  _users = [
-    {
-      firstName: 'Иван',
-      lastName: 'Иванович',
-      login: 'user',
-    },
-  ];
-
   _setUserToken(token) {
     localStorage.setItem(TOKEN_KEY, token);
   }
 
   async login(username) {
-    if (username === 'user') {
-      this._setUserToken(username);
-      this.isLoggedIn = true;
-      return this._users[0];
+    const { data } = await requestAPI('/users/auth', {
+      method: 'POST',
+      body: {
+        username,
+      },
+    });
+
+    if (data) {
+      this._setUserToken(data.token);
+      return data.user;
     }
+
     console.warn('[Auth Service] Not valid username');
     return null;
   }
@@ -34,21 +35,25 @@ class AuthService {
     this._setUserToken(null);
   }
 
-  getCurrentUser() {
+  getCurrentToken() {
+    return this._token;
+  }
+
+  async getCurrentUser() {
     if (!this._token) {
       console.warn('[Auth Service] User is not logged in');
     }
 
-    switch (this._token) {
-      case 'user': {
-        this._currentUser = this._users[0];
+    const { data: user } = await requestAPI('/users/me');
 
-        return this._currentUser;
-      }
-      default: {
-        return null;
-      }
+    if (!user) {
+      return null;
     }
+
+    return {
+      name: user.name,
+      login: user.username,
+    };
   }
 }
 

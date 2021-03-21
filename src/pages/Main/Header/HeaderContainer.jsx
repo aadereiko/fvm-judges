@@ -20,7 +20,5 @@ export const HeaderContainer = () => {
     actions.logout();
   }, [actions]);
 
-  return (
-    <Header name={`${user.lastName} ${user.firstName}`} notMarked={notMarked} onLogout={onLogout} />
-  );
+  return <Header name={`${user.name}`} notMarked={notMarked} onLogout={onLogout} />;
 };
