@@ -6,8 +6,12 @@ const { generateResponse } = require('../services/request');
 const auth = require('../middleware/auth');
 const router = express.Router();
 
-router.post('/api/users', async (req, res) => {
+router.post('/api/users', auth, async (req, res) => {
   const user = new User(req.body);
+
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(401).send(generateResponse(null, 'Нет прав создавать пользователей'));
+  }
 
   try {
     await user.save();
@@ -17,12 +21,16 @@ router.post('/api/users', async (req, res) => {
   }
 });
 
-router.delete('/api/users/:id', async (req, res) => {
+router.delete('/api/users/:id', auth, async (req, res) => {
   try {
     const id = req.params.id;
 
     if (!id) {
       return res.status(400).send(generateResponse(null, 'Id не указан'));
+    }
+
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(401).send(generateResponse(null, 'Нет прав удалять пользователей'));
     }
 
     const userToDelete = await User.findByIdAndDelete(id);
@@ -63,9 +71,14 @@ router.post('/api/users/auth', async (req, res) => {
   }
 });
 
-router.get('/api/users', async (req, res) => {
+router.get('/api/users', auth, async (req, res) => {
   try {
+    if (!req.user || req.user.role === 'admin') {
+      return res.status(401).send(generateResponse(null, 'Нет прав смотреть список пользователей'));
+    }
+
     const users = await User.find({});
+
     res.send(generateResponse(users || []));
   } catch (e) {
     res.status(500).send(generateResponse(null, e.message));

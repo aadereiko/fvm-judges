@@ -7,6 +7,7 @@ import { ParticipantContainer } from '../Participant';
 import { ParticipantPhotoContainer } from '../ParticipantPhoto';
 import { ParticipantsContainer } from '../Participants';
 import { Home } from '../Home';
+import { ManagementContainer } from '../Management/ManagementContainer';
 
 export const authRoutes = [
   { path: '/home', component: Home },
@@ -29,10 +30,24 @@ const generateRoute = ({ path, component, isRedirect = false }) =>
     <Route path={path} key={path} exact component={component} />
   );
 
-export const generateRoutes = (isAuth) => {
-  return (
-    (isAuth !== null &&
-      (isAuth ? authRoutes : notAuthRoutes).map((route) => generateRoute(route))) ||
-    null
-  );
+export const generateRoutes = (isAuth, role) => {
+  if (isAuth === null) {
+    return null;
+  }
+
+  if (!isAuth) {
+    return notAuthRoutes.map((route) => generateRoute(route));
+  }
+
+  const completedRoutes = [...authRoutes];
+
+  if (role === 'admin') {
+    completedRoutes.pop();
+    completedRoutes.push(
+      { path: '/management', component: ManagementContainer },
+      { path: '/home', isRedirect: true },
+    );
+  }
+
+  return completedRoutes.map((route) => generateRoute(route));
 };

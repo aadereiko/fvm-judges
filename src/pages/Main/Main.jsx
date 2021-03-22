@@ -23,16 +23,15 @@ const RouterWrapperElement = styled.div`
 `;
 
 export const Main = () => {
-  const { isLoggedIn } = useAuthState();
+  const { isLoggedIn, user } = useAuthState();
   return (
     <Router>
       {isLoggedIn && <HeaderContainer />}
       <ContentElement>
         <RouterWrapperElement>
-          <Switch>{generateRoutes(isLoggedIn)}</Switch>
+          <Switch>{generateRoutes(isLoggedIn, user && user.role)}</Switch>
         </RouterWrapperElement>
       </ContentElement>
-      <div>{isLoggedIn}</div>
       {isLoggedIn && <Footer />}
     </Router>
   );

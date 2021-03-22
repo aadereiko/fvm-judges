@@ -5,7 +5,7 @@ import { Dropdown, Nav, Navbar, DropdownButton, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { NavbarElement } from './elements';
 
-export const Header = ({ name, onLogout }) => {
+export const Header = ({ name, onLogout, role }) => {
   return (
     <div>
       <NavbarElement bg="gray">
@@ -19,6 +19,12 @@ export const Header = ({ name, onLogout }) => {
           <Nav.Link as={Link} to="/participants">
             Участники
           </Nav.Link>
+          {(role === 'admin' && (
+            <Nav.Link as={Link} to="/management">
+              Управление
+            </Nav.Link>
+          )) ||
+            null}
         </Nav>
         <Button
           // as={Link}
@@ -41,5 +47,6 @@ export const Header = ({ name, onLogout }) => {
 Header.propTypes = {
   name: PropTypes.string.isRequired,
   onLogout: PropTypes.func.isRequired,
+  role: PropTypes.oneOf(['judge', 'admin']),
   // notMarked: PropTypes.arrayOf(PropTypes.object),
 };

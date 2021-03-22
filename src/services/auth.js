@@ -53,6 +53,7 @@ class AuthService {
     return {
       name: user.name,
       login: user.username,
+      role: user.role,
     };
   }
 }
