@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuthState } from '../../contexts';
 import { Participants } from './Participants';
 
 export const ParticipantsContainer = () => {
@@ -6,6 +7,8 @@ export const ParticipantsContainer = () => {
   const [nominations, setNominations] = useState([]);
   const [isLoadedNominations, setIsLoadedNominations] = useState(true);
   const [isLoadedParticipants, setIsLoadedParticipants] = useState(true);
+  const { user } = useAuthState();
+
   useEffect(() => {
     fetch('/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nominations')
       .then((response) => response.json())
@@ -27,10 +30,13 @@ export const ParticipantsContainer = () => {
       .catch((err) => console.log(err));
   }, []);
   return (
-    <Participants
-      participants={participants}
-      nominations={nominations}
-      isLoading={isLoadedNominations || isLoadedParticipants}
-    />
+    <>
+      <Participants
+        participants={participants}
+        nominations={nominations}
+        isLoading={isLoadedNominations || isLoadedParticipants}
+        marks={user.marks || {}}
+      />
+    </>
   );
 };

@@ -19,7 +19,7 @@ const readFile = (path, errMsg, opts = 'utf8') =>
 
 async function init(callback) {
   const content = await new Promise((resolve, reject) => {
-    fs.readFile('credentials.json', 'utf8', (err, data) => {
+    fs.readFile('./credentials.json', 'utf8', (err, data) => {
       if (err) {
         console.log('Error loading client secret file:', err);
         reject(err)

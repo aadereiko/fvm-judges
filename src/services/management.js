@@ -1,10 +1,11 @@
 import { requestAPI } from './request';
-
 class ManagementService {
   constructor() {
     this._cachedUsers = [];
+    this._cachedUser = null;
     this._isCreatingJudge = false;
     this._isRemovingJudge = false;
+    this._isLoadingJudge = false;
   }
 
   async _fetchUsers() {
@@ -55,6 +56,31 @@ class ManagementService {
       }
       this._isRemovingJudge = false;
     }
+  }
+
+  async loadUser(id) {
+    if (!this._cachedUser || this._cachedUser._id !== id) {
+      if (!this._isLoadingJudge) {
+        this._isLoadingJudge = true;
+        const { data } = await requestAPI(`/users/${id}`);
+        this._isLoadingJudge = false;
+
+        if (data) {
+          this._cachedUser = data;
+        } else {
+          return null;
+        }
+      }
+    }
+    return this._cachedUser;
+  }
+
+  clean() {
+    this._cachedUsers = [];
+    this._cachedUser = null;
+    this._isCreatingJudge = false;
+    this._isRemovingJudge = false;
+    this._isLoadingJudge = false;
   }
 }
 

@@ -5,7 +5,7 @@ const Participant = require('../models/participant');
 
 const router = express.Router();
 
-router.get('/participants/:id', async (req, res) => {
+router.get('/api/participants/:id', async (req, res) => {
   try {
     const id = req.params.id;
 
@@ -25,7 +25,7 @@ router.get('/participants/:id', async (req, res) => {
   }
 });
 
-router.get('/participants', async (req, res) => {
+router.get('/api/participants', async (req, res) => {
   try {
     const participants = await Participant.find({});
     res.send(generateResponse(participants || []));

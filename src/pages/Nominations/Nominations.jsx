@@ -7,12 +7,13 @@ import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-dow
 import { ReactComponent as CheckedIcon } from '../../shared/assets/icons/check-circle.svg';
 import { ReactComponent as DashIcon } from '../../shared/assets/icons/dash-circle.svg';
 import { Link } from 'react-router-dom';
+import { Loader } from '../../shared';
 
 export const Nominations = ({ nominations, isLoading }) => {
   return (
     <NominationsWrapperElement>
       <h3>Номинации</h3>
-      {(isLoading && 'Загрузка...') || (
+      {(isLoading && <Loader />) || (
         <Table hover bordered responsive striped>
           <thead>
             <tr>

@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     unique: true,
   },
+  marks: {},
 });
 
 userSchema.methods.generateAuthToken = async function () {

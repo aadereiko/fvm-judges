@@ -8,14 +8,22 @@ import { ParticipantPhotoContainer } from '../ParticipantPhoto';
 import { ParticipantsContainer } from '../Participants';
 import { Home } from '../Home';
 import { ManagementContainer } from '../Management/ManagementContainer';
+import { JudgeProfileContainer } from '../JudgeProfile/JudgeProfileContainer';
 
-export const authRoutes = [
+export const judgeRoutes = [
   { path: '/home', component: Home },
   { path: '/participants', component: ParticipantsContainer },
   { path: '/participants/:id', component: ParticipantContainer },
   { path: '/nominations', component: NominationsContainer },
   { path: '/nominations/:id', component: NominationContainer },
   { path: '/photos/:nominationId/:participantId', component: ParticipantPhotoContainer },
+  { path: '/home', isRedirect: true },
+];
+
+export const adminRoutes = [
+  { path: '/home', component: Home },
+  { path: '/management/:id', component: JudgeProfileContainer },
+  { path: '/management', component: ManagementContainer },
   { path: '/home', isRedirect: true },
 ];
 
@@ -39,15 +47,9 @@ export const generateRoutes = (isAuth, role) => {
     return notAuthRoutes.map((route) => generateRoute(route));
   }
 
-  const completedRoutes = [...authRoutes];
-
   if (role === 'admin') {
-    completedRoutes.pop();
-    completedRoutes.push(
-      { path: '/management', component: ManagementContainer },
-      { path: '/home', isRedirect: true },
-    );
+    return adminRoutes.map((route) => generateRoute(route));
   }
 
-  return completedRoutes.map((route) => generateRoute(route));
+  return judgeRoutes.map((route) => generateRoute(route));
 };

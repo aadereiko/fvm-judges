@@ -13,18 +13,20 @@ export const Header = ({ name, onLogout, role }) => {
           ФВМ.Жюри
         </Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/nominations">
-            Номинации
-          </Nav.Link>
-          <Nav.Link as={Link} to="/participants">
-            Участники
-          </Nav.Link>
           {(role === 'admin' && (
             <Nav.Link as={Link} to="/management">
               Управление
             </Nav.Link>
-          )) ||
-            null}
+          )) || (
+            <>
+              <Nav.Link as={Link} to="/nominations">
+                Номинации
+              </Nav.Link>
+              <Nav.Link as={Link} to="/participants">
+                Участники
+              </Nav.Link>
+            </>
+          )}
         </Nav>
         <Button
           // as={Link}
@@ -36,7 +38,7 @@ export const Header = ({ name, onLogout, role }) => {
         >
           Оценивать
         </Button>
-        <DropdownButton variant="light" title={name}>
+        <DropdownButton variant="light" title={name} menuAlign="right">
           <Dropdown.Item onClick={onLogout}>Выйти</Dropdown.Item>
         </DropdownButton>
       </NavbarElement>

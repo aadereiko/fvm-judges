@@ -6,12 +6,14 @@ import { Table } from 'react-bootstrap';
 import { ParticipantsWrapperElement } from './elements';
 import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-circle.svg';
 import { Link } from 'react-router-dom';
+import { generateParticipantTableTds } from '../../shared/helpers/mark';
+import { Loader } from '../../shared';
 
-export const Participants = ({ participants, nominations, isLoading }) => {
+export const Participants = ({ participants, nominations, isLoading, marks }) => {
   return (
     <ParticipantsWrapperElement>
       <h3>Участники </h3>
-      {(isLoading && 'Загрузка...') || (
+      {(isLoading && <Loader />) || (
         <Table hover bordered responsive striped size="sm">
           <thead>
             <tr>
@@ -23,24 +25,12 @@ export const Participants = ({ participants, nominations, isLoading }) => {
             </tr>
           </thead>
           <tbody>
-            {participants.map((participant) => (
-              <tr key={participant.id}>
-                <td>{participant.id}</td>
-                {nominations.map((nomination) =>
-                  participant.nominations[nomination.id] ? (
-                    <td key={`${participant.id}-${nomination.id}`}>
-                      {participant.nominations[nomination.id].mark || '-'}
-                    </td>
-                  ) : (
-                    <td key={`${participant.id}-${nomination.id}`}>NO</td>
-                  ),
-                )}
-                <td>
-                  <Link to={`participants/${participant.id}`}>
-                    <ArrowIcon fill="black" />
-                  </Link>
-                </td>
-              </tr>
+            {generateParticipantTableTds(nominations, participants, marks, ({ participant }) => (
+              <td>
+                <Link to={`participants/${participant.id}`}>
+                  <ArrowIcon fill="black" />
+                </Link>
+              </td>
             ))}
           </tbody>
         </Table>
@@ -53,4 +43,5 @@ Participants.propTypes = {
   participants: PropTypes.arrayOf(participantPropType).isRequired,
   nominations: PropTypes.arrayOf(nominationPropType).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  marks: PropTypes.object.isRequired,
 };

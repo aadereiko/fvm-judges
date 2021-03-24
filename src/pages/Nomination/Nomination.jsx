@@ -4,6 +4,7 @@ import { NominationWrapperElement, CardElement, PhotosWrapperElement } from './e
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { photoPropType } from '../../shared/propTypes';
+import { Loader } from '../../shared';
 
 export const Nomination = ({ name, id, photos, isLoading }) => {
   const [nominationPhotos, setPhotos] = useState({});
@@ -23,7 +24,7 @@ export const Nomination = ({ name, id, photos, isLoading }) => {
   return (
     <NominationWrapperElement>
       <h3>{name}</h3>
-      {(isLoading && 'Загрузка...') || (
+      {(isLoading && <Loader />) || (
         <>
           <h4 className="text-muted">Фото: </h4>
           <PhotosWrapperElement>

@@ -5,7 +5,7 @@ const Nomination = require('../models/nomination');
 
 const router = express.Router();
 
-router.get('/nominations/:id', async (req, res) => {
+router.get('/api/nominations/:id', async (req, res) => {
   try {
     const id = req.params.id;
 
@@ -25,7 +25,7 @@ router.get('/nominations/:id', async (req, res) => {
   }
 });
 
-router.get('/nominations', async (req, res) => {
+router.get('/api/nominations', async (req, res) => {
   try {
     const nominations = await Nomination.find({});
     res.send(generateResponse(nominations || []));

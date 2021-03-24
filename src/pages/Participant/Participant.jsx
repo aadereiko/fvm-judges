@@ -8,6 +8,7 @@ import {
 import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { Loader } from '../../shared';
 
 export const Participant = ({ id, participant, isLoading }) => {
   const [photos, setPhotos] = useState({});
@@ -29,7 +30,7 @@ export const Participant = ({ id, participant, isLoading }) => {
   return (
     <ParticipantWrapperElement>
       <h3>Участник {id}</h3>
-      {(isLoading && 'Загрузка...') || (
+      {(isLoading && <Loader />) || (
         <>
           <ParticipantTitleElement className="text-muted">Фото:</ParticipantTitleElement>
           <PhotosWrapperElement>

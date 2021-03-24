@@ -15,6 +15,7 @@
     "gapi": "0.0.3",
     "googleapis": "^67.1.1",
     "jsonwebtoken": "^8.5.1",
+    "lodash.get": "^4.4.2",
     "mongodb": "^3.6.4",
     "mongoose": "^5.12.1",
     "prop-types": "^15.7.2",

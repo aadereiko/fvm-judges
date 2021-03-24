@@ -4,6 +4,7 @@ import { Button, Table, Modal, Form } from 'react-bootstrap';
 import { ManagementWrapperElement, ManagementHeaderElement, TrashElement } from './elements';
 import { userPropType } from '../../shared/propTypes';
 import { CreateUserForm } from './CreateUserForm';
+import { Link } from 'react-router-dom';
 
 export const Management = ({ users, onCreate, onDelete, isCreatingUser, isRemovingUser }) => {
   const [showModal, setShowModal] = useState(false);
@@ -49,6 +50,7 @@ export const Management = ({ users, onCreate, onDelete, isCreatingUser, isRemovi
                 <th>Имя пользователя</th>
                 <th>Роль</th>
                 <th>Удалить</th>
+                <th>Перейти</th>
               </tr>
             </thead>
             <tbody>
@@ -64,6 +66,11 @@ export const Management = ({ users, onCreate, onDelete, isCreatingUser, isRemovi
                           <TrashElement onClick={handleDelete(user._id)} />
                         ) : (
                           'Нельзя удалить'
+                        )}
+                      </td>
+                      <td>
+                        {user.role === 'judge' && (
+                          <Link to={`management/${user._id}`}>Перейти</Link>
                         )}
                       </td>
                     </tr>

@@ -10,6 +10,7 @@ class AuthService {
   }
 
   _setUserToken(token) {
+    this._token = token;
     localStorage.setItem(TOKEN_KEY, token);
   }
 
@@ -23,6 +24,7 @@ class AuthService {
 
     if (data) {
       this._setUserToken(data.token);
+      this._currentUser = data.user;
       return data.user;
     }
 
@@ -37,6 +39,11 @@ class AuthService {
 
   getCurrentToken() {
     return this._token;
+  }
+
+  clean() {
+    this._currentUser = null;
+    this._token = null;
   }
 
   async getCurrentUser() {
@@ -54,6 +61,7 @@ class AuthService {
       name: user.name,
       login: user.username,
       role: user.role,
+      marks: user.marks,
     };
   }
 }
