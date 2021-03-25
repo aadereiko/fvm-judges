@@ -147,7 +147,7 @@ const getPhoto = async (dbName, nominationId, participantId) => {
 
 const getUser = async (dbName, login) => {
   let data = await connectDB(async (client) => {
-    let collection = await client.db(dbName).collection('users').findOne({ login: login });
+    let collection = await client.db(dbName).collection('users').findOne({ username: login });
 
     return collection;
   });

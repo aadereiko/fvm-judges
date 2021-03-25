@@ -129,7 +129,7 @@ app.get('/api/mongo/season/:id/user/:login/:nominationId/:participantId', async 
   let nominationId = req.params.nominationId;
   let participantId = req.params.participantId;
   let user = await mongodb.getUser(seasonId, login);
-  console.log(user.marks[nominationId][participantId]);
+
   res.send(user.marks[nominationId][participantId]);
 });
 
