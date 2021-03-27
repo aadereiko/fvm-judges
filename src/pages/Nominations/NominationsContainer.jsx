@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { nominationsService } from '../../services/nominations';
 import { Nominations } from './Nominations';
 
 export const NominationsContainer = () => {
   const [nominations, setNominations] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(true);
+
   useEffect(() => {
-    fetch('/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nominations')
-      .then((response) => response.json())
-      .then((data) => {
-        setNominations(data);
-        setLoadingStatus(false);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const loadNominations = async () => {
+      const nominations = await nominationsService.loadNominations();
+      setNominations(nominations);
+      setLoadingStatus(false);
+    };
+    loadNominations();
+  }, [setNominations, setLoadingStatus]);
 
   return <Nominations nominations={nominations} isLoading={loadingStatus} />;
 };

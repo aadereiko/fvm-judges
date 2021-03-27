@@ -11,7 +11,7 @@ class NominationsService {
       const { data } = await requestAPI(`/nominations`);
 
       if (data && data.length) {
-        this._cachedNominations = data;
+        this._cachedNominations = data.sort((a, b) => b.id - a.id);
       }
     }
     return this._cachedNominations;

@@ -1,7 +1,9 @@
+import { BasicService } from './BasicService';
 import { requestAPI } from './request';
 
-class ParticipantsService {
+class ParticipantsService extends BasicService {
   constructor() {
+    super();
     this._cachedParticipants = [];
     this._isLoadingParticipants = false;
   }
@@ -11,7 +13,7 @@ class ParticipantsService {
       const { data } = await requestAPI(`/participants`);
 
       if (data && data.length) {
-        this._cachedParticipants = data;
+        this._cachedParticipants = data.sort((a, b) => a.id - b.id);
       }
     }
     return this._cachedParticipants;

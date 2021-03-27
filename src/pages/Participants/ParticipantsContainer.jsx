@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthState } from '../../contexts';
+import { nominationsService } from '../../services/nominations';
+import { participantsService } from '../../services/participants';
 import { Participants } from './Participants';
 
 export const ParticipantsContainer = () => {
@@ -10,25 +12,23 @@ export const ParticipantsContainer = () => {
   const { user } = useAuthState();
 
   useEffect(() => {
-    fetch('/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nominations')
-      .then((response) => response.json())
-      .then((data) => {
-        data.sort((a, b) => b.id - a.id);
-        setNominations(data);
-        setIsLoadedNominations(false);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const loadNominations = async () => {
+      const nominations = await nominationsService.loadNominations();
+      setNominations(nominations);
+      setIsLoadedNominations(false);
+    };
+    loadNominations();
+  }, [setIsLoadedNominations, setIsLoadedNominations]);
+
   useEffect(() => {
-    fetch('/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/participants')
-      .then((response) => response.json())
-      .then((data) => {
-        data.sort((a, b) => a.id - b.id);
-        setParticipants(data);
-        setIsLoadedParticipants(false);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const loadParticipants = async () => {
+      const participants = await participantsService.loadParticipants();
+      setParticipants(participants);
+      setIsLoadedParticipants(false);
+    };
+    loadParticipants();
+  }, [setParticipants, setIsLoadedParticipants]);
+
   return (
     <>
       <Participants

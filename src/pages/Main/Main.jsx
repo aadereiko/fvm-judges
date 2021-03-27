@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
@@ -7,6 +7,10 @@ import { HeaderContainer } from './Header';
 import { generateRoutes } from './routerConfig';
 import { useAuthState } from '../../contexts';
 import { Footer } from './Footer/Footer';
+import { useSnackbarContext } from '../../contexts/Snackbar/SnackbarContext';
+import { participantsService } from '../../services/participants';
+import { managementService } from '../../services/management';
+import { authService } from '../../services/auth';
 
 const ContentElement = styled.main`
   background-color: ${APP_COLORS.SUPER_LIGHT_GRAY};
@@ -24,6 +28,14 @@ const RouterWrapperElement = styled.div`
 
 export const Main = () => {
   const { isLoggedIn, user } = useAuthState();
+  const { setSnackbarStatus } = useSnackbarContext();
+
+  useEffect(() => {
+    [managementService, authService].forEach((service) => {
+      service.setSnackbarChanger(setSnackbarStatus);
+    });
+  }, [setSnackbarStatus]);
+
   return (
     <Router>
       {isLoggedIn && <HeaderContainer />}

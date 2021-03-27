@@ -45,7 +45,7 @@ const setNominations = async (seasonId) => {
 const setParticipants = async (seasonId, nominations) => {
   let participants = {};
   let admin = {
-    login: 'admin',
+    username: 'username',
     marks: {},
   };
 

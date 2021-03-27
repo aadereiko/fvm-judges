@@ -21,10 +21,9 @@ export const judgeRoutes = [
 ];
 
 export const adminRoutes = [
-  { path: '/home', component: Home },
   { path: '/management/:id', component: JudgeProfileContainer },
   { path: '/management', component: ManagementContainer },
-  { path: '/home', isRedirect: true },
+  { path: '/management', isRedirect: true },
 ];
 
 export const notAuthRoutes = [
