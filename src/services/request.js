@@ -20,3 +20,13 @@ export const requestAPI = async (url, { body, ...options } = {}) => {
       console.error(err);
     });
 };
+
+export const snackbarHandler = (response, snackbarChanger) => {
+  const text = response.err || response.msg;
+  if (text) {
+    snackbarChanger({
+      isShown: true,
+      text,
+    });
+  }
+};

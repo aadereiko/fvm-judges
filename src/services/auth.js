@@ -1,9 +1,11 @@
-import { requestAPI } from './request';
+import { requestAPI, snackbarHandler } from './request';
+import { BasicService } from './BasicService';
 
 const TOKEN_KEY = 'FVM_TOKEN';
 
-class AuthService {
+class AuthService extends BasicService {
   constructor() {
+    super();
     this._token = localStorage.getItem(TOKEN_KEY);
     this._currentUser = null;
     this.isLoggedIn = !!this._token;
@@ -15,17 +17,22 @@ class AuthService {
   }
 
   async login(username) {
-    const { data } = await requestAPI('/users/auth', {
+    const response = await requestAPI('/users/auth', {
       method: 'POST',
       body: {
         username,
       },
     });
 
-    if (data) {
-      this._setUserToken(data.token);
-      this._currentUser = data.user;
-      return data.user;
+    if (response && response.data) {
+      this._setUserToken(response.data.token);
+      this._currentUser = response.data.user;
+    }
+
+    snackbarHandler(response, this.snackbarChanger);
+
+    if (response && response.data) {
+      return response.data.user;
     }
 
     console.warn('[Auth Service] Not valid username');

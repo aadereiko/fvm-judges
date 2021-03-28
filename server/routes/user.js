@@ -19,7 +19,7 @@ router.post('/api/users', auth, async (req, res) => {
       await initJudgeMarks(user);
     }
     await user.save();
-    res.status(201).send(generateResponse(user));
+    res.status(201).send(generateResponse(user, null, 'Член жюри успешно создан'));
   } catch (e) {
     res.status(500).send(generateResponse(null, e.message));
   }
@@ -69,7 +69,7 @@ router.post('/api/users/auth', async (req, res) => {
     }
 
     const token = await user.generateAuthToken();
-    res.send(generateResponse({ user, token }));
+    res.send(generateResponse({ user, token }, null, 'Вы успешно вошли в систему'));
   } catch (e) {
     res.status(500).send(generateResponse(null, e.message));
   }

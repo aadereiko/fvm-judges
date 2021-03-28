@@ -1,6 +1,8 @@
-import { requestAPI } from './request';
-class ManagementService {
+import { BasicService } from './BasicService';
+import { requestAPI, snackbarHandler } from './request';
+class ManagementService extends BasicService {
   constructor() {
+    super();
     this._cachedUsers = [];
     this._cachedUser = null;
     this._isCreatingJudge = false;
@@ -9,13 +11,17 @@ class ManagementService {
   }
 
   async _fetchUsers() {
-    const { data } = await requestAPI(`/users`);
+    const response = await requestAPI(`/users`);
 
-    if (data && data.length) {
-      this._cachedUsers = data;
+    if (response) {
+      if (response.data && response.data.length) {
+        this._cachedUsers = response.data;
+      }
+
+      return response.data;
     }
 
-    return data;
+    return [];
   }
 
   async getUsers() {
@@ -29,7 +35,7 @@ class ManagementService {
   async createJudge({ name, username }) {
     if (!this._isCreatingJudge) {
       this._isCreatingJudge = true;
-      const { data } = await requestAPI('/users', {
+      const response = await requestAPI('/users', {
         method: 'POST',
         body: {
           name,
@@ -38,9 +44,11 @@ class ManagementService {
         },
       });
 
-      if (data) {
-        this._cachedUsers.push(data);
+      if (response && response.data) {
+        this._cachedUsers.push(response.data);
       }
+
+      snackbarHandler(response, this.snackbarChanger);
       this._isCreatingJudge = false;
     }
   }
@@ -48,12 +56,14 @@ class ManagementService {
   async removeJudge(id) {
     if (!this._isRemovingJudge) {
       this._isRemovingJudge = true;
-      const { data } = await requestAPI(`/users/${id}`, {
+      const response = await requestAPI(`/users/${id}`, {
         method: 'DELETE',
       });
-      if (data) {
+      if (response && response.data) {
         this._cachedUsers = this._cachedUsers.filter((user) => user._id !== id);
       }
+      snackbarHandler(response, this.snackbarChanger);
+
       this._isRemovingJudge = false;
     }
   }
