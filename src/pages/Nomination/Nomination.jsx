@@ -36,6 +36,7 @@ export const Nomination = ({ name, id, photos, isLoading }) => {
               >
                 <Card.Img
                   variant="top"
+                  loading="lazy"
                   src={nominationPhotos[photo.name] ? nominationPhotos[photo.name].link : ''}
                 />
                 <Card.Body>

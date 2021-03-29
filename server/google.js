@@ -3,7 +3,7 @@ const readline = require('readline');
 const { google } = require('googleapis');
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive.readonly'];
-const TOKEN_PATH = 'token.json';
+const TOKEN_PATH = './token.json';
 
 const readFile = (path, errMsg, opts = 'utf8') =>
   new Promise((resolve, reject) => {
