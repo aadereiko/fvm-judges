@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { requestAPI } from '../../services/request';
+import { useAuthState } from '../../contexts/AuthContext';
 import {
   ParticipantPhotoWrapperElement,
   PhotoWrapperElement,
@@ -45,8 +47,25 @@ export const ParticipantPhoto = ({
   isLoading,
 }) => {
   const marks = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
+  const { user } = useAuthState();
   const [look, setLook] = useState((mark && mark.look) || 0);
   const [idea, setIdea] = useState((mark && mark.idea) || 0);
+
+  const setMarks = async (mark, type) => {
+    console.log(mark, type);
+    type == 'look' ? setLook(mark) : setIdea(mark);
+    console.log(user);
+    const response = await requestAPI(`/user/${user.login}/${nominationId}/${participantId}`, {
+      method: 'PUT',
+      body: {
+        type: type,
+        mark: mark,
+      },
+    });
+
+    user.marks[nominationId][participantId] = response;
+  };
+
   return !isLoading ? (
     (photo && (
       <ParticipantPhotoWrapperElement>
@@ -63,12 +82,12 @@ export const ParticipantPhoto = ({
             <h4>Оценки:</h4>
             <span>Идея:</span>
             <StarsWrapperElement>
-              {marks.map((mark) => getMarkStar(mark, idea, 'idea', () => setIdea(mark)))}
+              {marks.map((mark) => getMarkStar(mark, idea, 'idea', () => setMarks(mark, 'idea')))}
               <MarkLabelElement className="text-muted">{idea}</MarkLabelElement>
             </StarsWrapperElement>
             <span>Исполнение:</span>
             <StarsWrapperElement>
-              {marks.map((mark) => getMarkStar(mark, look, 'look', () => setLook(mark)))}
+              {marks.map((mark) => getMarkStar(mark, look, 'look', () => setMarks(mark, 'look')))}
               <MarkLabelElement className="text-muted">{look}</MarkLabelElement>
             </StarsWrapperElement>
             <span className="text-muted">Cредняя оценка - {(look + idea) / 2}</span>

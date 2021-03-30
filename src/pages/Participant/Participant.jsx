@@ -49,7 +49,8 @@ export const Participant = ({ id, participant, isLoading }) => {
                       />
                     ))}
                     <Card.Body>
-                      <Card.Title>{nominationKey}</Card.Title>
+                      <Card.Title>{participant.nominations[nominationKey].name}</Card.Title>
+                      {() => console.log(participant.nominations[nominationKey])}
                       {/* <Card.Subtitle className="mb-2 text-muted">
                     Оценка: {currentParticipant.nominations[nominationId].mark || '-'}
                   </Card.Subtitle> */}

@@ -4,7 +4,7 @@ const mongodb = require('./mongodb');
 const create = async (seasonId) => {
   const season = await mongodb.createSeason(seasonId);
   const nominations = await setNominations(seasonId);
-  const participants = await setParticipants(seasonId, nominations);
+  const adminUser = await setParticipants(seasonId, nominations);
   console.log('fine');
 };
 
@@ -26,11 +26,11 @@ const setNominations = async (seasonId) => {
         await delay(500);
         photos.push(photo);
       }
-      // await mongodb.addDocumentToCollection(seasonId, 'nominations', {
-      //     name: nominationInfo.name,
-      //     id: nominationInfo.id,
-      //     photos: photos
-      // })
+      await mongodb.addDocumentToCollection(seasonId, 'nominations', {
+          name: nominationInfo.name,
+          id: nominationInfo.id,
+          photos: photos
+      })
       return {
         name: nominationInfo.name,
         id: nominationInfo.id,
@@ -44,10 +44,7 @@ const setNominations = async (seasonId) => {
 
 const setParticipants = async (seasonId, nominations) => {
   let participants = {};
-  let admin = {
-    username: 'username',
-    marks: {},
-  };
+  let marks = {};
 
   nominations.map((nomination) => {
     nomination.photos.map((photo) => {
@@ -60,26 +57,42 @@ const setParticipants = async (seasonId, nominations) => {
       }
       if (!participants[participantName].nominations[nomination.id]) {
         participants[participantName].nominations[nomination.id] = {
+          name: nomination.name,
           photo: [],
         };
       }
       participants[participantName].nominations[nomination.id].photo.push(photo);
-      if (!admin.marks[nomination.id]) admin.marks[nomination.id] = {};
-      admin.marks[nomination.id][participantName] = {
-        idea: null,
-        look: null,
+      if (!marks[nomination.id]) marks[nomination.id] = {};
+      marks[nomination.id][participantName] = {
+        idea: 0,
+        look: 0,
       };
     });
   });
-  console.log(admin);
-  let user = await mongodb.addDocumentToCollection(seasonId, 'users', admin);
-  // let data = await Promise.all(Object.keys(participants).map(async participantId => {
-  //     let participant = await mongodb.addDocumentToCollection(seasonId, 'participants', participants[participantId]);
+  // let user = await mongodb.addDocumentToCollection(seasonId, 'users', marks);
+  let data = await Promise.all(Object.keys(participants).map(async participantId => {
+      let participant = await mongodb.addDocumentToCollection(seasonId, 'participants', participants[participantId]);
 
-  //     return participant;
-  // }))
+      return participant;
+  }))
 
-  // return data;
+  const adminUser = await setUser(seasonId, marks, 'admin', 'Admin', 'admin');
+  const judgeUser = await setUser(seasonId, marks, 'user', 'Пользователь с какими-то оценками', 'judge');
+  const sanyaUser = await setUser(seasonId, marks, 'aadereiko', 'Александр Адерейко', 'judge');
+
+  return data;
 };
 
+const setUser = async (seasonId, marks, username, name, role) => {
+  let user = {
+    username,
+    role,
+    name,
+    marks: marks,
+  };
+
+  let newUser = await mongodb.addDocumentToCollection(seasonId, 'users', user);
+
+  return newUser;
+};
 create('1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk');

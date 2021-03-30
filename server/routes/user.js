@@ -114,4 +114,21 @@ router.get('/api/users/:id', auth, async (req, res) => {
   }
 });
 
+router.put('/api/user/:id/:nomId/:partId', auth, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const nomId = req.params.nomId;
+    const partId = req.params.partId;
+
+    const user = await User.findOne({ username: id });
+    user.marks[nomId][partId][req.body.type] = req.body.mark;
+    const userUpdate = await User.updateOne({username: id}, {$set: { 'marks': user.marks }});
+
+    res.send(user.marks[nomId][partId]);
+
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
 module.exports = router;

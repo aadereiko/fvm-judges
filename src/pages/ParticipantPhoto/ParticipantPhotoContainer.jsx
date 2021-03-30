@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ParticipantPhoto } from './ParticipantPhoto';
+import { useAuthState } from '../../contexts/AuthContext';
 
 export const ParticipantPhotoContainer = () => {
   const { participantId, nominationId } = useParams({});
   const [nominationName, setNominationName] = useState('');
   const [photo, setPhoto] = useState();
-  const [mark, setMark] = useState({});
+  // const [mark, setMark] = useState({});
   const [isLoadingNomination, setIsLoadingNomination] = useState(true);
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
   const [isLoadingMark, setIsLoadingMark] = useState(true);
+  const { user } = useAuthState();
 
   useEffect(() => {
     fetch(`
@@ -34,18 +36,18 @@ export const ParticipantPhotoContainer = () => {
         console.log(err);
         setIsLoadingNomination(false);
       });
-    fetch(`
-      /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/user/admin/${nominationId}/${participantId}
-    `)
-      .then((response) => response.json())
-      .then((mark) => {
-        setMark(mark);
-        setIsLoadingMark(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoadingMark(false);
-      });
+    // fetch(`
+    //   /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/user/admin/${nominationId}/${participantId}
+    // `)
+    //   .then((response) => response.json())
+    //   .then((mark) => {
+    //     setMark(mark);
+    //     setIsLoadingMark(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setIsLoadingMark(false);
+    //   });
   }, []);
 
   // const nominationName = useMemo(
@@ -66,9 +68,9 @@ export const ParticipantPhotoContainer = () => {
       participantId={participantId}
       nominationId={nominationId}
       photo={photo}
-      mark={mark}
+      mark={user.marks[nominationId][participantId]}
       nominationName={nominationName}
-      isLoading={isLoadingMark || isLoadingNomination || isLoadingPhoto}
+      isLoading={isLoadingNomination || isLoadingPhoto}
     />
   );
 };
