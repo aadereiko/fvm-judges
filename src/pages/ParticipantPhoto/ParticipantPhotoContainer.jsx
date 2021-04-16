@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { ParticipantPhoto } from './ParticipantPhoto';
 import { useAuthState } from '../../contexts/AuthContext';
+import { authService } from '../../services/auth';
 
 export const ParticipantPhotoContainer = () => {
   const { participantId, nominationId } = useParams({});
@@ -11,7 +12,22 @@ export const ParticipantPhotoContainer = () => {
   const [isLoadingNomination, setIsLoadingNomination] = useState(true);
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
   const [isLoadingMark, setIsLoadingMark] = useState(true);
-  const { user } = useAuthState();
+  const { user, actions } = useAuthState();
+
+  const handleMarkChange = async ({ type, mark }) => {
+    const response = await authService.putMark({
+      type,
+      mark,
+      participantId,
+      nominationId,
+    });
+    const marks = response || { idea: 0, look: 0 };
+    user.marks[nominationId][participantId] = marks;
+
+    if (marks.look && marks.idea) {
+      actions.getNextMark();
+    }
+  };
 
   useEffect(() => {
     fetch(`
@@ -36,32 +52,7 @@ export const ParticipantPhotoContainer = () => {
         console.log(err);
         setIsLoadingNomination(false);
       });
-    // fetch(`
-    //   /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/user/admin/${nominationId}/${participantId}
-    // `)
-    //   .then((response) => response.json())
-    //   .then((mark) => {
-    //     setMark(mark);
-    //     setIsLoadingMark(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     setIsLoadingMark(false);
-    //   });
-  }, []);
-
-  // const nominationName = useMemo(
-  //   () => (NOMINATIONS[nominationId - 1] && NOMINATIONS[nominationId - 1].name) || '',
-  //   [nominationId],
-  // );
-  // const photo = useMemo(() => {
-  //   return (
-  //     (PARTICIPANTS[participantId] &&
-  //       PARTICIPANTS[participantId].nominations &&
-  //       PARTICIPANTS[participantId].nominations[nominationId]) ||
-  //     null
-  //   );
-  // }, [nominationId, participantId]);
+  }, [participantId, nominationId]);
 
   return (
     <ParticipantPhoto
@@ -71,6 +62,7 @@ export const ParticipantPhotoContainer = () => {
       mark={user.marks[nominationId][participantId]}
       nominationName={nominationName}
       isLoading={isLoadingNomination || isLoadingPhoto}
+      onMarkChange={handleMarkChange}
     />
   );
 };

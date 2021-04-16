@@ -25,13 +25,19 @@ export const Participants = ({ participants, nominations, isLoading, marks }) =>
             </tr>
           </thead>
           <tbody>
-            {generateParticipantTableTds(nominations, participants, marks, ({ participant }) => (
-              <td>
-                <Link to={`participants/${participant.id}`}>
-                  <ArrowIcon fill="black" />
-                </Link>
-              </td>
-            ))}
+            {generateParticipantTableTds(
+              nominations,
+              participants,
+              marks,
+              true,
+              ({ participant }) => (
+                <td>
+                  <Link to={`participants/${participant.id}`}>
+                    <ArrowIcon fill="black" />
+                  </Link>
+                </td>
+              ),
+            )}
           </tbody>
         </Table>
       )}

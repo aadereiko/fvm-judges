@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const { generateResponse } = require('../services/request');
 const auth = require('../middleware/auth');
-const { initJudgeMarks } = require('../helpers/user');
+const { initJudgeMarks, findNextPhoto } = require('../helpers/user');
 const router = express.Router();
 
 router.post('/api/users', auth, async (req, res) => {
@@ -63,7 +63,7 @@ router.post('/api/users/auth', async (req, res) => {
       return res.status(400).send(generateResponse(null, 'Не указан username'));
     }
 
-    const user = await User.findOne({ username: req.body.username }).select('-marks');
+    const user = await User.findOne({ username: req.body.username });
     if (!user) {
       return res.status(404).send(generateResponse(null, 'Пользователь не найден'));
     }
@@ -85,6 +85,26 @@ router.get('/api/users', auth, async (req, res) => {
     const users = await User.find({}).select(`${(isWithoutMarks && '-marks') || ''}`);
 
     res.send(generateResponse(users || []));
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
+router.get('/api/users/notMarked', auth, async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user.marks) {
+      throw new Error('Неправильный формат данных');
+    }
+
+    // nomination,
+    // user
+    let next = findNextPhoto(user.marks);
+    if (!next) {
+      return res.send(generateResponse(null));
+    }
+    res.send(generateResponse(next));
   } catch (e) {
     res.status(500).send(generateResponse(null, e.message));
   }
@@ -114,18 +134,17 @@ router.get('/api/users/:id', auth, async (req, res) => {
   }
 });
 
-router.put('/api/user/:id/:nomId/:partId', auth, async (req, res) => {
+router.put('/api/user/:nomId/:partId', auth, async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.user.username;
     const nomId = req.params.nomId;
     const partId = req.params.partId;
 
     const user = await User.findOne({ username: id });
     user.marks[nomId][partId][req.body.type] = req.body.mark;
-    const userUpdate = await User.updateOne({username: id}, {$set: { 'marks': user.marks }});
+    const userUpdate = await User.updateOne({ username: id }, { $set: { marks: user.marks } });
 
-    res.send(user.marks[nomId][partId]);
-
+    res.send(generateResponse(user.marks[nomId][partId]));
   } catch (e) {
     res.status(500).send(generateResponse(null, e.message));
   }

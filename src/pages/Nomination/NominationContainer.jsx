@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuthState } from '../../contexts';
 import { Nomination } from './Nomination';
 
 export const NominationContainer = () => {
+  const { user } = useAuthState();
   const { id } = useParams();
   const [name, setName] = useState('');
   const [photos, setPhotos] = useState([]);
@@ -28,5 +30,7 @@ export const NominationContainer = () => {
   //     })),
   //   [id],
   // );
-  return <Nomination name={name} id={id} photos={photos} isLoading={isLoading} />;
+  return (
+    <Nomination name={name} id={id} photos={photos} isLoading={isLoading} marks={user.marks} />
+  );
 };

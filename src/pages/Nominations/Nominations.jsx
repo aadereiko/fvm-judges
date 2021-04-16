@@ -4,8 +4,8 @@ import { Table } from 'react-bootstrap';
 import { nominationPropType } from '../../shared/propTypes/nominations';
 import { NominationsWrapperElement } from './elements';
 import { ReactComponent as ArrowIcon } from '../../shared/assets/icons/arrow-down-right-circle.svg';
-import { ReactComponent as CheckedIcon } from '../../shared/assets/icons/check-circle.svg';
-import { ReactComponent as DashIcon } from '../../shared/assets/icons/dash-circle.svg';
+// import { ReactComponent as CheckedIcon } from '../../shared/assets/icons/check-circle.svg';
+// import { ReactComponent as DashIcon } from '../../shared/assets/icons/dash-circle.svg';
 import { Link } from 'react-router-dom';
 import { Loader } from '../../shared';
 
@@ -18,9 +18,6 @@ export const Nominations = ({ nominations, isLoading }) => {
           <thead>
             <tr>
               <th>Название</th>
-              <th>Оценено</th>
-              <th>Всего</th>
-              <th>Статус</th>
               <th>Перейти</th>
             </tr>
           </thead>
@@ -30,9 +27,9 @@ export const Nominations = ({ nominations, isLoading }) => {
                 <td>
                   <b>{name}</b>
                 </td>
+                {/* <td>{id}</td>
                 <td>{id}</td>
-                <td>{id}</td>
-                <td>{id % 2 ? <DashIcon fill="red" /> : <CheckedIcon fill="green" />}</td>
+                <td>{id % 2 ? <DashIcon fill="red" /> : <CheckedIcon fill="green" />}</td> */}
                 <td>
                   <Link to={`nominations/${id}`}>
                     <ArrowIcon fill="black" />

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuthState } from '../../contexts';
 import { Participant } from './Participant';
 
 export const ParticipantContainer = () => {
+  const { user } = useAuthState();
   const { id } = useParams();
   const [participant, setParticipant] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -19,6 +21,9 @@ export const ParticipantContainer = () => {
   }, [setIsLoading]);
 
   return (
-    (participant && <Participant id={id} participant={participant} isLoading={isLoading} />) || null
+    (participant && (
+      <Participant id={id} participant={participant} isLoading={isLoading} marks={user.marks} />
+    )) ||
+    null
   );
 };

@@ -7,19 +7,12 @@ import { participantsService } from '../../../services/participants';
 import { Header } from './Header';
 
 export const HeaderContainer = () => {
-  const { user, actions } = useAuthState();
-  const [notMarked, setNotMarked] = useState([]);
+  const { user, actions, nextMark } = useAuthState();
 
   useEffect(() => {
-    fetch(`
-      /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/user/admin/notmarked
-    `)
-      .then((response) => response.json())
-      .then((data) => {
-        setNotMarked(data);
-      })
-      .catch((err) => console.log(err));
+    actions.getNextMark();
   }, []);
+
   const onLogout = useCallback(() => {
     actions.logout();
 
@@ -28,7 +21,5 @@ export const HeaderContainer = () => {
     );
   }, [actions]);
 
-  return (
-    <Header name={`${user.name}`} notMarked={notMarked} role={user.role} onLogout={onLogout} />
-  );
+  return <Header name={`${user.name}`} role={user.role} onLogout={onLogout} nextMark={nextMark} />;
 };

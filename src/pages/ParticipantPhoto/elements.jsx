@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import { ReactComponent as StarIcon } from '../../shared/assets/icons/star.svg';
 import { ReactComponent as StarFillIcon } from '../../shared/assets/icons/star-fill.svg';
 import { ReactComponent as ArrowLeftIcon } from '../../shared/assets/icons/arrow-left-circle-fill.svg';
-import { ReactComponent as ArrowRightIcon } from '../../shared/assets/icons/arrow-right-circle-fill.svg';
+import { Link } from 'react-router-dom';
+import { APP_COLORS } from '../../shared';
 
 export const ParticipantPhotoWrapperElement = styled.div`
   display: flex;
@@ -63,12 +64,18 @@ export const ArrowLeftIconElement = styled(ArrowLeftIcon)`
   position: absolute;
   top: 50%;
   left: 1rem;
-  cursor: pointer;
+  color: gray;
 `;
 
-export const ArrowRightIconElement = styled(ArrowRightIcon)`
+export const ArrowRightLinkElement = styled(Link)`
   position: absolute;
   top: 50%;
   right: 1rem;
-  cursor: pointer;
+  width: 6%;
+  height: 6%;
+  display: inline-block;
+
+  svg {
+    color: ${APP_COLORS.PRIMARY_BLACK};
+  }
 `;

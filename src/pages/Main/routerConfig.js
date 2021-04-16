@@ -9,6 +9,7 @@ import { ParticipantsContainer } from '../Participants';
 import { Home } from '../Home';
 import { ManagementContainer } from '../Management/ManagementContainer';
 import { JudgeProfileContainer } from '../JudgeProfile/JudgeProfileContainer';
+import { NextPhoto } from '../NextPhoto/NextPhoto';
 
 export const judgeRoutes = [
   { path: '/home', component: Home },
@@ -17,6 +18,7 @@ export const judgeRoutes = [
   { path: '/nominations', component: NominationsContainer },
   { path: '/nominations/:id', component: NominationContainer },
   { path: '/photos/:nominationId/:participantId', component: ParticipantPhotoContainer },
+  { path: '/nextPhoto', component: NextPhoto },
   { path: '/home', isRedirect: true },
 ];
 

@@ -2,13 +2,31 @@ import React from 'react';
 import get from 'lodash.get';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { ReactComponent as DashIcon } from '../../shared/assets/icons/dash-circle.svg';
+import { FlexColumnCenteredWrapperElement, LinkToPhotoElement } from './elements';
 
 export const generateParticipantTableTds = (
   nominations,
   participants,
   marks,
+  isWithLinks = false,
   rightColumnsCallback = () => {},
 ) => {
+  const renderMarkCell = ({ nomination, participant, ideaMark, lookMark }) => {
+    return isWithLinks ? (
+      <LinkToPhotoElement to={`/photos/${nomination.id}/${participant.id}`}>
+        {ideaMark}
+        <span className="text-muted">{' | '}</span>
+        {lookMark}
+      </LinkToPhotoElement>
+    ) : (
+      <div>
+        {ideaMark}
+        <span className="text-muted">{' | '}</span>
+        {lookMark}
+      </div>
+    );
+  };
+
   return participants.map((participant) => (
     <tr key={participant._id}>
       <td>{participant.id}</td>
@@ -17,26 +35,20 @@ export const generateParticipantTableTds = (
         const lookMark = get(marks, `${nomination.id}.${participant.id}.look`, false);
         const avgMark = ideaMark && lookMark ? (ideaMark + lookMark) / 2 : 0;
 
-        return marks[nomination.id][participant.id] ? (
+        return marks && marks[nomination.id] && marks[nomination.id][participant.id] ? (
           <td className="text-center" key={`${participant._id}-${nomination._id}`}>
             <OverlayTrigger
               overlay={
                 <Tooltip>
-                  <div
-                    style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}
-                  >
+                  <FlexColumnCenteredWrapperElement>
                     <span>Идея: {ideaMark}</span>
                     <span>Реализация: {lookMark}</span>
                     <span>Средняя: {avgMark}</span>
-                  </div>
+                  </FlexColumnCenteredWrapperElement>
                 </Tooltip>
               }
             >
-              <div>
-                {ideaMark}
-                <span className="text-muted">{' | '}</span>
-                {lookMark}
-              </div>
+              {renderMarkCell({ nomination, participant, ideaMark, lookMark })}
             </OverlayTrigger>
           </td>
         ) : (
@@ -44,11 +56,7 @@ export const generateParticipantTableTds = (
             <OverlayTrigger
               overlay={
                 <Tooltip>
-                  <div
-                    style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}
-                  >
-                    <span>Нет фото</span>
-                  </div>
+                  <span>Нет фото</span>
                 </Tooltip>
               }
             >
@@ -60,4 +68,28 @@ export const generateParticipantTableTds = (
       {rightColumnsCallback && rightColumnsCallback({ participant })}
     </tr>
   ));
+};
+
+export const renderTooltipedMarkLabel = ({ idea, look } = { idea: 0, look: 0 }) => {
+  const avg = idea && look ? (idea + look) / 2 : 0;
+
+  return (
+    <OverlayTrigger
+      overlay={
+        <Tooltip>
+          <FlexColumnCenteredWrapperElement>
+            <span>Идея: {idea}</span>
+            <span>Реализация: {look}</span>
+            <span>Средняя: {avg}</span>
+          </FlexColumnCenteredWrapperElement>
+        </Tooltip>
+      }
+    >
+      <div>
+        {idea}
+        <span className="text-muted">{' | '}</span>
+        {look}
+      </div>
+    </OverlayTrigger>
+  );
 };

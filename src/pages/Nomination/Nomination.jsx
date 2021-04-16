@@ -5,8 +5,9 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { photoPropType } from '../../shared/propTypes';
 import { Loader } from '../../shared';
+import { renderTooltipedMarkLabel } from '../../shared/helpers/mark';
 
-export const Nomination = ({ name, id, photos, isLoading }) => {
+export const Nomination = ({ name, id, photos, isLoading, marks }) => {
   const [nominationPhotos, setPhotos] = useState({});
   const getPhotoLink = async (photoId) => {
     fetch(`
@@ -29,11 +30,7 @@ export const Nomination = ({ name, id, photos, isLoading }) => {
           <h4 className="text-muted">Фото: </h4>
           <PhotosWrapperElement>
             {photos.map((photo) => (
-              <CardElement
-                key={photo.name}
-                // bg={photo.mark ? 'light' : 'dark'}
-                // text={photo.mark ? 'dark' : 'light'}
-              >
+              <CardElement key={photo.name}>
                 <Card.Img
                   variant="top"
                   loading="lazy"
@@ -41,7 +38,10 @@ export const Nomination = ({ name, id, photos, isLoading }) => {
                 />
                 <Card.Body>
                   <Card.Title>Участник {photo.name.split('_')[0]}</Card.Title>
-                  {/* <Card.Subtitle className="mb-2 text-muted">Оценка: {photo.mark || '-'}</Card.Subtitle> */}
+                  <Card.Text>
+                    <span className="text-muted">Оценки:</span>
+                    {renderTooltipedMarkLabel(marks[id][photo.name.split('_')[0]])}
+                  </Card.Text>
                   <Card.Link as={Link} to={`/participants/${photo.name.split('_')[0]}`}>
                     Участник
                   </Card.Link>
@@ -64,4 +64,5 @@ Nomination.propTypes = {
   id: PropTypes.string.isRequired,
   photos: PropTypes.arrayOf(photoPropType).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  marks: PropTypes.object.isRequired,
 };

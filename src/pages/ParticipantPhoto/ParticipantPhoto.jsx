@@ -1,7 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { requestAPI } from '../../services/request';
-import { useAuthState } from '../../contexts/AuthContext';
 import {
   ParticipantPhotoWrapperElement,
   PhotoWrapperElement,
@@ -12,12 +10,14 @@ import {
   MarkLabelElement,
   MarksWrapperElement,
   ArrowLeftIconElement,
-  ArrowRightIconElement,
+  ArrowRightLinkElement,
 } from './elements';
 import { photoPropType } from '../../shared/propTypes';
-import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Loader } from '../../shared';
+
+import { ReactComponent as ArrowRightIcon } from '../../shared/assets/icons/arrow-right-circle-fill.svg';
+import { OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
 
 const getMarkStar = (currentMark, setMark, section, clickCallback = () => {}) => {
   const props = {
@@ -45,35 +45,42 @@ export const ParticipantPhoto = ({
   photo,
   mark,
   isLoading,
+  onMarkChange,
 }) => {
   const marks = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
-  const { user } = useAuthState();
   const [look, setLook] = useState((mark && mark.look) || 0);
   const [idea, setIdea] = useState((mark && mark.idea) || 0);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
-  const setMarks = async (mark, type) => {
-    console.log(mark, type);
+  const setMarks = (mark, type) => {
     type == 'look' ? setLook(mark) : setIdea(mark);
-    console.log(user);
-    const response = await requestAPI(`/user/${user.login}/${nominationId}/${participantId}`, {
-      method: 'PUT',
-      body: {
-        type: type,
-        mark: mark,
-      },
-    });
-
-    user.marks[nominationId][participantId] = response;
+    onMarkChange({ mark, type });
   };
+
+  useEffect(() => {
+    setLook((mark && mark.look) || 0);
+    setIdea((mark && mark.idea) || 0);
+  }, [mark, participantId, nominationId, setLook, setIdea]);
+
+  useEffect(() => {
+    setIsImageLoading(true);
+  }, [photo, setIsImageLoading]);
+
+  const setImageLoaded = () => setIsImageLoading(false);
 
   return !isLoading ? (
     (photo && (
       <ParticipantPhotoWrapperElement>
         <PhotoWrapperElement>
           <ArrowLeftIconElement width="6%" height="6%" />
-          <ArrowRightIconElement width="6%" height="6%" />
 
-          <img src={getFullImage(photo.link)} alt="Фото номинации"></img>
+          <ArrowRightLinkElement to="/nextPhoto">
+            <OverlayTrigger overlay={<Tooltip>Перейти к неоцененной фотографии</Tooltip>}>
+              <ArrowRightIcon width="100%" height="100%" />
+            </OverlayTrigger>
+          </ArrowRightLinkElement>
+
+          <img src={getFullImage(photo.link)} alt="Фото номинации" onLoad={setImageLoaded}></img>
         </PhotoWrapperElement>
         <PhotoInfoBlockElement>
           <h3>{nominationName}</h3>
@@ -116,4 +123,5 @@ ParticipantPhoto.propTypes = {
     idea: PropTypes.number,
     look: PropTypes.number,
   }),
+  onMarkChange: PropTypes.func.isRequired,
 };

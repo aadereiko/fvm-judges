@@ -10,9 +10,11 @@ const authDataDefault = {
   // null is not checked, false - not auth, true - auth
   isLoggedIn: null,
   status: 'pending',
+  nextMark: null,
   actions: {
     login: () => {},
     logout: () => {},
+    getNextMark: () => {},
   },
 };
 
@@ -45,10 +47,21 @@ export const AuthProvider = ({ children }) => {
     }));
   }, [setAuthData]);
 
+  const getNextMark = useCallback(async () => {
+    const mark = await authService.getNextMark();
+    if (mark) {
+      setAuthData((state) => ({
+        ...state,
+        nextMark: mark,
+      }));
+    }
+  }, [setAuthData]);
+
   useEffect(() => {
     const actions = {};
     actions.login = login;
     actions.logout = logout;
+    actions.getNextMark = getNextMark;
 
     const fetchData = async () => {
       const currentUser = await authService.getCurrentUser();
@@ -70,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
     fetchData();
-  }, [setAuthData, login, logout]);
+  }, [setAuthData, login, logout, getNextMark]);
 
   return (
     <AuthContext.Provider value={authData}>

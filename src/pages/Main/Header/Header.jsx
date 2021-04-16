@@ -5,7 +5,7 @@ import { Dropdown, Nav, Navbar, DropdownButton, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { NavbarElement } from './elements';
 
-export const Header = ({ name, onLogout, role }) => {
+export const Header = ({ name, onLogout, role, nextMark }) => {
   return (
     <div>
       <NavbarElement bg="gray">
@@ -28,16 +28,18 @@ export const Header = ({ name, onLogout, role }) => {
             </>
           )}
         </Nav>
-        <Button
-          // as={Link}
-          // to={
-          //   notMarked[0] ? `/photos/${notMarked[0].nomination}/${notMarked[0].notMarked[0]}` : '#'
-          // }
-          variant="dark"
-          disabled
-        >
-          Оценивать
-        </Button>
+        {role === 'judge' && (
+          <Button
+            as={Link}
+            // to={nextMark ? `/photos/${nextMark.nominationId}/${nextMark.participantId}` : '#'}
+            to={nextMark ? `/nextPhoto` : '#'}
+            variant="dark"
+            disabled={!nextMark}
+          >
+            Оценивать
+          </Button>
+        )}
+
         <DropdownButton variant="light" title={name} menuAlign="right">
           <Dropdown.Item onClick={onLogout}>Выйти</Dropdown.Item>
         </DropdownButton>
@@ -50,5 +52,8 @@ Header.propTypes = {
   name: PropTypes.string.isRequired,
   onLogout: PropTypes.func.isRequired,
   role: PropTypes.oneOf(['judge', 'admin']),
-  // notMarked: PropTypes.arrayOf(PropTypes.object),
+  nextMark: PropTypes.shape({
+    nominationId: PropTypes.string,
+    participantId: PropTypes.string,
+  }),
 };

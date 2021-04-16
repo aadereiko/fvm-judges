@@ -23,6 +23,48 @@ const initJudgeMarks = async (user) => {
   });
 };
 
+const findNextPhoto = (marks) => {
+  let isNextFound = false;
+  let next = null;
+  const nominationIds = Object.keys(marks);
+
+  if (nominationIds && nominationIds.length) {
+    for (let i = 0; i < nominationIds.length; i++) {
+      if (isNextFound) {
+        break;
+      }
+
+      const participantsOfNomination = marks[nominationIds[i]];
+      const participantIds = Object.keys(participantsOfNomination);
+
+      if (participantIds && participantIds.length) {
+        for (let j = 0; j < participantIds.length; j++) {
+          // there are no photos
+          if (!participantsOfNomination[participantIds[j]]) {
+            continue;
+          } else if (
+            !participantsOfNomination[participantIds[j]].idea ||
+            !participantsOfNomination[participantIds[j]].look
+          ) {
+            isNextFound = true;
+            next = {
+              nominationId: nominationIds[i],
+              participantId: participantIds[j],
+            };
+          }
+
+          if (isNextFound) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return next;
+};
+
 module.exports = {
   initJudgeMarks,
+  findNextPhoto,
 };

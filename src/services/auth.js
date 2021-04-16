@@ -9,6 +9,7 @@ class AuthService extends BasicService {
     this._token = localStorage.getItem(TOKEN_KEY);
     this._currentUser = null;
     this.isLoggedIn = !!this._token;
+    this._nextMark = null;
   }
 
   _setUserToken(token) {
@@ -51,6 +52,7 @@ class AuthService extends BasicService {
   clean() {
     this._currentUser = null;
     this._token = null;
+    this._nextMark = null;
   }
 
   async getCurrentUser() {
@@ -70,6 +72,30 @@ class AuthService extends BasicService {
       role: user.role,
       marks: user.marks,
     };
+  }
+
+  async getNextMark() {
+    const response = await requestAPI('/users/notMarked');
+
+    if (response && response.data) {
+      this._nextMark = response.data;
+    }
+
+    return this._nextMark;
+  }
+
+  async putMark({ type, mark, nominationId, participantId }) {
+    const response = await requestAPI(`/user/${nominationId}/${participantId}`, {
+      method: 'PUT',
+      body: {
+        type: type,
+        mark: mark,
+      },
+    });
+
+    snackbarHandler(response, this.snackbarChanger);
+
+    return response.data;
   }
 }
 

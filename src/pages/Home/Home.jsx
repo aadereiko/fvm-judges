@@ -53,7 +53,12 @@ export const Home = () => {
           оценки до 10 утра среды
         </p>
       </CardElement>
-      <Button variant="dark" disabled>
+      <Button
+        as={Link}
+        // to={nextMark ? `/photos/${nextMark.nominationId}/${nextMark.participantId}` : '#'}
+        to="/nextPhoto"
+        variant="dark"
+      >
         Начать оценивать
       </Button>
     </HomeWrapperElement>

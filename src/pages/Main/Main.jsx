@@ -36,12 +36,14 @@ export const Main = () => {
     });
   }, [setSnackbarStatus]);
 
+  const routes = generateRoutes(isLoggedIn, user && user.role);
+
   return (
     <Router>
       {isLoggedIn && <HeaderContainer />}
       <ContentElement>
         <RouterWrapperElement>
-          <Switch>{generateRoutes(isLoggedIn, user && user.role)}</Switch>
+          <Switch>{routes}</Switch>
         </RouterWrapperElement>
       </ContentElement>
       {isLoggedIn && <Footer />}

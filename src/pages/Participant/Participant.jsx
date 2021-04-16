@@ -9,8 +9,9 @@ import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Loader } from '../../shared';
+import { renderTooltipedMarkLabel } from '../../shared/helpers/mark';
 
-export const Participant = ({ id, participant, isLoading }) => {
+export const Participant = ({ id, participant, isLoading, marks }) => {
   const [photos, setPhotos] = useState({});
   const getPhotoLink = async (photoId) => {
     fetch(`
@@ -50,10 +51,13 @@ export const Participant = ({ id, participant, isLoading }) => {
                     ))}
                     <Card.Body>
                       <Card.Title>{participant.nominations[nominationKey].name}</Card.Title>
-                      {() => console.log(participant.nominations[nominationKey])}
                       {/* <Card.Subtitle className="mb-2 text-muted">
                     Оценка: {currentParticipant.nominations[nominationId].mark || '-'}
                   </Card.Subtitle> */}
+                      <Card.Text>
+                        <span className="text-muted">Оценки:</span>
+                        {renderTooltipedMarkLabel(marks[nominationKey][id])}
+                      </Card.Text>
                       <Card.Link as={Link} to={`/nominations/${nominationKey}`}>
                         Номинация
                       </Card.Link>
@@ -77,4 +81,5 @@ Participant.propTypes = {
   id: PropTypes.string.isRequired,
   participant: PropTypes.object,
   isLoading: PropTypes.bool.isRequired,
+  marks: PropTypes.object.isRequired,
 };
