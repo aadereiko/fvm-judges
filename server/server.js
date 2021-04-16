@@ -44,7 +44,11 @@ app.get('/api/google/nomination/:id', (req, res) => {
 app.get('/api/google/nomination/name/:id', (req, res) => {
   let nominationsId = req.params.id;
 
-  google.getNominationName(res, nominationsId);
+  try {
+    google.getNominationName(res, nominationsId);
+  } catch (e) {
+    console.log(e.message);
+  }
 });
 
 app.get('/api/google/photo/:id', async (req, res) => {

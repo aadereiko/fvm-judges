@@ -80,6 +80,7 @@ export const JudgeProfile = ({ name, username, marks, isLoading, nominations, pa
   return !isLoading ? (
     <JudgeProfileWrapperElement>
       <header>
+        <h3>Жюри</h3>
         <h3>{name}</h3>
         <h4>логин: {username}</h4>
         <DownloadButtonElement variant="dark" onClick={exportToCSV}>

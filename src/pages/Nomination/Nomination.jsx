@@ -7,7 +7,7 @@ import { photoPropType } from '../../shared/propTypes';
 import { Loader } from '../../shared';
 import { renderTooltipedMarkLabel } from '../../shared/helpers/mark';
 
-export const Nomination = ({ name, id, photos, isLoading, marks }) => {
+export const Nomination = ({ name, id, photos, isLoading, marks, withoutMarks, isAdmin }) => {
   const [nominationPhotos, setPhotos] = useState({});
   const getPhotoLink = async (photoId) => {
     fetch(`
@@ -38,17 +38,24 @@ export const Nomination = ({ name, id, photos, isLoading, marks }) => {
                 />
                 <Card.Body>
                   <Card.Title>Участник {photo.name.split('_')[0]}</Card.Title>
-                  <Card.Text>
-                    <span className="text-muted">Оценки:</span>
-                    {renderTooltipedMarkLabel(marks[id][photo.name.split('_')[0]])}
-                  </Card.Text>
-                  <Card.Link as={Link} to={`/participants/${photo.name.split('_')[0]}`}>
+                  {!withoutMarks && (
+                    <Card.Text>
+                      <span className="text-muted">Оценки:</span>
+                      {renderTooltipedMarkLabel(marks[id][photo.name.split('_')[0]])}
+                    </Card.Text>
+                  )}
+                  <Card.Link
+                    as={Link}
+                    to={`${isAdmin ? '/management' : ''}/participants/${photo.name.split('_')[0]}`}
+                  >
                     Участник
                   </Card.Link>
                   <br></br>
-                  <Card.Link as={Link} to={`/photos/${id}/${photo.name.split('_')[0]}`}>
-                    Оценить
-                  </Card.Link>
+                  {!withoutMarks && (
+                    <Card.Link as={Link} to={`/photos/${id}/${photo.name.split('_')[0]}`}>
+                      Оценить
+                    </Card.Link>
+                  )}
                 </Card.Body>
               </CardElement>
             ))}
@@ -64,5 +71,7 @@ Nomination.propTypes = {
   id: PropTypes.string.isRequired,
   photos: PropTypes.arrayOf(photoPropType).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  withoutMarks: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
   marks: PropTypes.object.isRequired,
 };

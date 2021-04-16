@@ -9,6 +9,7 @@ export const NominationContainer = () => {
   const [name, setName] = useState('');
   const [photos, setPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isAdmin = user.role === 'admin';
 
   useEffect(() => {
     fetch(`/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${id}`)
@@ -31,6 +32,14 @@ export const NominationContainer = () => {
   //   [id],
   // );
   return (
-    <Nomination name={name} id={id} photos={photos} isLoading={isLoading} marks={user.marks} />
+    <Nomination
+      name={name}
+      id={id}
+      photos={photos}
+      isLoading={isLoading}
+      marks={user.marks}
+      withoutMarks={isAdmin}
+      isAdmin={isAdmin}
+    />
   );
 };

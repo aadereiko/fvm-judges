@@ -8,10 +8,10 @@ class NominationsService {
 
   async loadNominations() {
     if (!this._cachedNominations || !this._cachedNominations.length) {
-      const { data } = await requestAPI(`/nominations`);
+      const response = await requestAPI(`/nominations`);
 
-      if (data && data.length) {
-        this._cachedNominations = data.sort((a, b) => b.id - a.id);
+      if (response && response.data && response.data.length) {
+        this._cachedNominations = response.data.sort((a, b) => b.id - a.id);
       }
     }
     return this._cachedNominations;

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const { generateResponse } = require('../services/request');
 const auth = require('../middleware/auth');
-const { initJudgeMarks, findNextPhoto } = require('../helpers/user');
+const { initJudgeMarks, findNextPhoto, getSumsOfUsers } = require('../helpers/user');
 const router = express.Router();
 
 router.post('/api/users', auth, async (req, res) => {
@@ -110,6 +110,21 @@ router.get('/api/users/notMarked', auth, async (req, res) => {
   }
 });
 
+router.get('/api/users/marks/sum', auth, async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(401).send(generateResponse(null, 'Нет прав смотреть результаты'));
+    }
+
+    const allUsers = await User.find({ role: 'judge' }).select('marks');
+    const sums = getSumsOfUsers(allUsers);
+
+    res.send(generateResponse(sums));
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
 router.get('/api/users/:id', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') {
@@ -142,7 +157,7 @@ router.put('/api/user/:nomId/:partId', auth, async (req, res) => {
 
     const user = await User.findOne({ username: id });
     user.marks[nomId][partId][req.body.type] = req.body.mark;
-    const userUpdate = await User.updateOne({ username: id }, { $set: { marks: user.marks } });
+    await User.updateOne({ username: id }, { $set: { marks: user.marks } });
 
     res.send(generateResponse(user.marks[nomId][partId]));
   } catch (e) {

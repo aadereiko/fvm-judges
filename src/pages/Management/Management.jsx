@@ -50,7 +50,6 @@ export const Management = ({ users, onCreate, onDelete, isCreatingUser, isRemovi
                 <th>Имя пользователя</th>
                 <th>Роль</th>
                 <th>Удалить</th>
-                <th>Перейти</th>
               </tr>
             </thead>
             <tbody>
@@ -58,7 +57,14 @@ export const Management = ({ users, onCreate, onDelete, isCreatingUser, isRemovi
                 (user) =>
                   user.username && (
                     <tr key={user.username}>
-                      <td>{user.name}</td>
+                      <td>
+                        {user.role === 'judge' ? (
+                          <Link to={`management/${user._id}`}>{user.name}</Link>
+                        ) : (
+                          user.name
+                        )}
+                      </td>
+
                       <td>{user.username}</td>
                       <td>{user.role === 'judge' ? 'Жюри' : 'Админ'}</td>
                       <td>
@@ -66,11 +72,6 @@ export const Management = ({ users, onCreate, onDelete, isCreatingUser, isRemovi
                           <TrashElement onClick={handleDelete(user._id)} />
                         ) : (
                           'Нельзя удалить'
-                        )}
-                      </td>
-                      <td>
-                        {user.role === 'judge' && (
-                          <Link to={`management/${user._id}`}>Перейти</Link>
                         )}
                       </td>
                     </tr>

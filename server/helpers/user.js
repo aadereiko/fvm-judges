@@ -64,7 +64,55 @@ const findNextPhoto = (marks) => {
   return next;
 };
 
+const getSumsOfUsers = (users) => {
+  const participantSums = {};
+  if (users && users.length) {
+    const allMarks = users.map(({ marks }) => marks);
+    const nominationIds = Object.keys(allMarks[0]);
+    for (let i = 0; i < allMarks.length; i++) {
+      const userMarks = allMarks[i];
+
+      nominationIds.forEach((nominationId) => {
+        Object.keys(userMarks[nominationId]).forEach((participantId) => {
+          let isFinished = true;
+
+          if (!participantSums[participantId]) {
+            participantSums[participantId] = {
+              isFinished: true,
+            };
+          }
+
+          if (!participantSums[participantId][nominationId]) {
+            participantSums[participantId][nominationId] = {
+              idea: 0,
+              look: 0,
+            };
+          }
+
+          const currentMark = userMarks[nominationId][participantId];
+          const currentParticipantNomination = participantSums[participantId][nominationId];
+
+          if (currentMark) {
+            if (!currentMark.look || !currentMark.idea) {
+              isFinished = false;
+            }
+
+            currentParticipantNomination.look += currentMark.look || 0;
+            currentParticipantNomination.idea += currentMark.idea || 0;
+
+            if (participantSums[participantId].isFinished) {
+              participantSums[participantId].isFinished = isFinished;
+            }
+          }
+        });
+      });
+    }
+  }
+
+  return participantSums;
+};
 module.exports = {
   initJudgeMarks,
   findNextPhoto,
+  getSumsOfUsers,
 };

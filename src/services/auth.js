@@ -10,6 +10,7 @@ class AuthService extends BasicService {
     this._currentUser = null;
     this.isLoggedIn = !!this._token;
     this._nextMark = null;
+    this._markSums = null;
   }
 
   _setUserToken(token) {
@@ -60,11 +61,13 @@ class AuthService extends BasicService {
       console.warn('[Auth Service] User is not logged in');
     }
 
-    const { data: user } = await requestAPI('/users/me');
+    const response = await requestAPI('/users/me');
 
-    if (!user) {
+    if (!response || !response.data) {
       return null;
     }
+
+    const user = response.data;
 
     return {
       name: user.name,
@@ -96,6 +99,18 @@ class AuthService extends BasicService {
     snackbarHandler(response, this.snackbarChanger);
 
     return response.data;
+  }
+
+  async getMarkSums() {
+    const response = await requestAPI('/users/marks/sum');
+
+    if (response && response.data) {
+      this._markSums = response.data;
+    }
+
+    snackbarHandler(response, this.snackbarChanger);
+
+    return this._markSums;
   }
 }
 

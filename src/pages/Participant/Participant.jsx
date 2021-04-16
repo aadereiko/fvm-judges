@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { Loader } from '../../shared';
 import { renderTooltipedMarkLabel } from '../../shared/helpers/mark';
 
-export const Participant = ({ id, participant, isLoading, marks }) => {
+export const Participant = ({ id, participant, isLoading, marks, withoutMarks, isAdmin }) => {
   const [photos, setPhotos] = useState({});
   const getPhotoLink = async (photoId) => {
     fetch(`
@@ -38,10 +38,7 @@ export const Participant = ({ id, participant, isLoading, marks }) => {
             {Object.keys(participant.nominations).map((nominationKey) => (
               <React.Fragment key={nominationKey}>
                 {nominationKey != '0' && (
-                  <CardElement
-                  // bg={currentParticipant.nominations[nominationId].mark ? 'light' : 'dark'}
-                  // text={currentParticipant.nominations[nominationId].mark ? 'dark' : 'light'}
-                  >
+                  <CardElement>
                     {participant.nominations[nominationKey].photo.map((photo, index) => (
                       <Card.Img
                         variant="top"
@@ -51,20 +48,24 @@ export const Participant = ({ id, participant, isLoading, marks }) => {
                     ))}
                     <Card.Body>
                       <Card.Title>{participant.nominations[nominationKey].name}</Card.Title>
-                      {/* <Card.Subtitle className="mb-2 text-muted">
-                    Оценка: {currentParticipant.nominations[nominationId].mark || '-'}
-                  </Card.Subtitle> */}
-                      <Card.Text>
-                        <span className="text-muted">Оценки:</span>
-                        {renderTooltipedMarkLabel(marks[nominationKey][id])}
-                      </Card.Text>
-                      <Card.Link as={Link} to={`/nominations/${nominationKey}`}>
+                      {!withoutMarks && (
+                        <Card.Text>
+                          <span className="text-muted">Оценки:</span>
+                          {renderTooltipedMarkLabel(marks[nominationKey][id])}
+                        </Card.Text>
+                      )}
+                      <Card.Link
+                        as={Link}
+                        to={`${isAdmin ? '/management' : ''}/nominations/${nominationKey}`}
+                      >
                         Номинация
                       </Card.Link>
                       <br></br>
-                      <Card.Link as={Link} to={`/photos/${nominationKey}/${id}`}>
-                        Оценить
-                      </Card.Link>
+                      {!withoutMarks && (
+                        <Card.Link as={Link} to={`/photos/${nominationKey}/${id}`}>
+                          Оценить
+                        </Card.Link>
+                      )}
                     </Card.Body>
                   </CardElement>
                 )}
@@ -82,4 +83,6 @@ Participant.propTypes = {
   participant: PropTypes.object,
   isLoading: PropTypes.bool.isRequired,
   marks: PropTypes.object.isRequired,
+  withoutMarks: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };

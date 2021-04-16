@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { NavbarElement } from './elements';
 
 export const Header = ({ name, onLogout, role, nextMark }) => {
+  const isAdmin = role === 'admin';
+  const adminPrefix = isAdmin ? '/management' : '';
   return (
     <div>
       <NavbarElement bg="gray">
@@ -13,22 +15,19 @@ export const Header = ({ name, onLogout, role, nextMark }) => {
           ФВМ.Жюри
         </Navbar.Brand>
         <Nav className="mr-auto">
-          {(role === 'admin' && (
+          {isAdmin && (
             <Nav.Link as={Link} to="/management">
               Управление
             </Nav.Link>
-          )) || (
-            <>
-              <Nav.Link as={Link} to="/nominations">
-                Номинации
-              </Nav.Link>
-              <Nav.Link as={Link} to="/participants">
-                Участники
-              </Nav.Link>
-            </>
           )}
+          <Nav.Link as={Link} to={`${adminPrefix}/nominations`}>
+            Номинации
+          </Nav.Link>
+          <Nav.Link as={Link} to={`${adminPrefix}/participants`}>
+            Участники
+          </Nav.Link>
         </Nav>
-        {role === 'judge' && (
+        {!isAdmin && (
           <Button
             as={Link}
             // to={nextMark ? `/photos/${nextMark.nominationId}/${nextMark.participantId}` : '#'}

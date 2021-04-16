@@ -22,11 +22,13 @@ export const requestAPI = async (url, { body, ...options } = {}) => {
 };
 
 export const snackbarHandler = (response, snackbarChanger) => {
-  const text = response.err || response.msg;
-  if (text) {
-    snackbarChanger({
-      isShown: true,
-      text,
-    });
+  if (response) {
+    const text = response.err || response.msg;
+    if (text) {
+      snackbarChanger({
+        isShown: true,
+        text,
+      });
+    }
   }
 };

@@ -10,6 +10,7 @@ import { Home } from '../Home';
 import { ManagementContainer } from '../Management/ManagementContainer';
 import { JudgeProfileContainer } from '../JudgeProfile/JudgeProfileContainer';
 import { NextPhoto } from '../NextPhoto/NextPhoto';
+import { ManagementParticipantsContainer } from '../management/ManagementParticipants/ManagementParticipants';
 
 export const judgeRoutes = [
   { path: '/home', component: Home },
@@ -23,6 +24,10 @@ export const judgeRoutes = [
 ];
 
 export const adminRoutes = [
+  { path: '/management/participants', component: ManagementParticipantsContainer },
+  { path: '/management/participants/:id', component: ParticipantContainer },
+  { path: '/management/nominations', component: NominationsContainer },
+  { path: '/management/nominations/:id', component: NominationContainer },
   { path: '/management/:id', component: JudgeProfileContainer },
   { path: '/management', component: ManagementContainer },
   { path: '/management', isRedirect: true },

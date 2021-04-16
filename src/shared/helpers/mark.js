@@ -60,7 +60,9 @@ export const generateParticipantTableTds = (
                 </Tooltip>
               }
             >
-              <DashIcon fill="red" />
+              {/* <DashIcon fill="red" />
+               */}
+              <span>-</span>
             </OverlayTrigger>
           </td>
         );

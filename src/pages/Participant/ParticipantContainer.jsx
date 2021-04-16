@@ -5,6 +5,7 @@ import { Participant } from './Participant';
 
 export const ParticipantContainer = () => {
   const { user } = useAuthState();
+  const isAdmin = user.role === 'admin';
   const { id } = useParams();
   const [participant, setParticipant] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +23,14 @@ export const ParticipantContainer = () => {
 
   return (
     (participant && (
-      <Participant id={id} participant={participant} isLoading={isLoading} marks={user.marks} />
+      <Participant
+        id={id}
+        participant={participant}
+        isLoading={isLoading}
+        marks={user.marks}
+        withoutMarks={user.role === 'admin'}
+        isAdmin={isAdmin}
+      />
     )) ||
     null
   );
