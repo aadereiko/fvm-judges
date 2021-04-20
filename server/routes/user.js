@@ -125,6 +125,47 @@ router.get('/api/users/marks/sum', auth, async (req, res) => {
   }
 });
 
+router.get('/api/users/marks', auth, async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(401).send(generateResponse(null, 'Нет прав смотреть оценки участника'));
+    }
+
+    const participantId = req.query.participantId;
+
+    if (!participantId) {
+      return res.send(400).send(generateResponse(null, 'Неправильный запрос, нет id участника'));
+    }
+
+    const users = await User.find({ role: 'judge' }).select('marks name username');
+    const marks = {};
+    if (users && users.length) {
+      const nominationIds = Object.keys(users[0].marks);
+
+      for (let i = 0; i < users.length; i++) {
+        const currentUser = users[i];
+
+        for (let j = 0; j < nominationIds.length; j++) {
+          if (!marks[nominationIds[j]]) {
+            marks[nominationIds[j]] = {};
+          }
+
+          const value =
+            (currentUser.marks &&
+              currentUser.marks[nominationIds[j]] &&
+              currentUser.marks[nominationIds[j]][participantId]) ||
+            null;
+          marks[nominationIds[j]][currentUser.username] = value;
+        }
+      }
+    }
+
+    res.send(generateResponse(sums));
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
 router.get('/api/users/:id', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') {

@@ -10,6 +10,7 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Loader } from '../../shared';
 import { renderTooltipedMarkLabel } from '../../shared/helpers/mark';
+import { ParticipantMarksContainer } from './ParticipantMarks/ParticipantMarksContainer';
 
 export const Participant = ({ id, participant, isLoading, marks, withoutMarks, isAdmin }) => {
   const [photos, setPhotos] = useState({});
@@ -33,6 +34,13 @@ export const Participant = ({ id, participant, isLoading, marks, withoutMarks, i
       <h3>Участник {id}</h3>
       {(isLoading && <Loader />) || (
         <>
+          <ParticipantTitleElement className="text-muted">Оценки жюри:</ParticipantTitleElement>
+          {isAdmin && (
+            <>
+              <ParticipantMarksContainer />
+              <hr></hr>
+            </>
+          )}
           <ParticipantTitleElement className="text-muted">Фото:</ParticipantTitleElement>
           <PhotosWrapperElement>
             {Object.keys(participant.nominations).map((nominationKey) => (
