@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { authService } from '../../../services/auth';
-import { nominationsService } from '../../../services/nominations';
-import { participantsService } from '../../../services/participants';
+import { authService } from '../../services/auth';
+import { nominationsService } from '../../services/nominations';
+import { participantsService } from '../../services/participants';
 import { ManagementParticipants } from './ManagementParticipants';
 
 export const ManagementParticipantsContainer = () => {

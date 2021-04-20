@@ -10,7 +10,7 @@ import { Home } from '../Home';
 import { ManagementContainer } from '../Management/ManagementContainer';
 import { JudgeProfileContainer } from '../JudgeProfile/JudgeProfileContainer';
 import { NextPhoto } from '../NextPhoto/NextPhoto';
-import { ManagementParticipantsContainer } from '../Management/ManagementParticipants/ManagementParticipantsContainer';
+import { ManagementParticipantsContainer } from '../ManagementParticipants/ManagementParticipantsContainer';
 
 export const judgeRoutes = [
   { path: '/home', component: Home },

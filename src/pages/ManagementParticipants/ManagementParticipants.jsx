@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Loader } from '../../../shared';
+import { Loader } from '../../shared';
 import { ManagementPraticipantsWrapperElement } from './elements';
-import { ReactComponent as DashIcon } from '../../../shared/assets/icons/dash-circle.svg';
-import { ReactComponent as CheckedIcon } from '../../../shared/assets/icons/check-circle.svg';
+import { ReactComponent as DashIcon } from '../../shared/assets/icons/dash-circle.svg';
+import { ReactComponent as CheckedIcon } from '../../shared/assets/icons/check-circle.svg';
 
 import { OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
-import { nominationPropType, participantPropType } from '../../../shared/propTypes';
+import { nominationPropType, participantPropType } from '../../shared/propTypes';
 import { Link } from 'react-router-dom';
 
 export const ManagementParticipants = ({ isLoading, marks, nominations, participants }) => {

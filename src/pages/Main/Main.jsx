@@ -8,7 +8,6 @@ import { generateRoutes } from './routerConfig';
 import { useAuthState } from '../../contexts';
 import { Footer } from './Footer/Footer';
 import { useSnackbarContext } from '../../contexts/Snackbar/SnackbarContext';
-import { participantsService } from '../../services/participants';
 import { managementService } from '../../services/management';
 import { authService } from '../../services/auth';
 
