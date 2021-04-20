@@ -10,9 +10,21 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Loader } from '../../shared';
 import { renderTooltipedMarkLabel } from '../../shared/helpers/mark';
-import { ParticipantMarksContainer } from './ParticipantMarks/ParticipantMarksContainer';
+import { ParticipantMarks } from './ParticipantMarks/ParticipantMarks';
+import { nominationPropType, userPropType } from '../../shared/propTypes';
 
-export const Participant = ({ id, participant, isLoading, marks, withoutMarks, isAdmin }) => {
+export const Participant = ({
+  id,
+  participant,
+  isLoading,
+  marks,
+  withoutMarks,
+  isAdmin,
+  allJudgeMarks,
+  isAllJudgeMarksLoading,
+  nominations,
+  users,
+}) => {
   const [photos, setPhotos] = useState({});
   const getPhotoLink = async (photoId) => {
     fetch(`
@@ -37,7 +49,11 @@ export const Participant = ({ id, participant, isLoading, marks, withoutMarks, i
           <ParticipantTitleElement className="text-muted">Оценки жюри:</ParticipantTitleElement>
           {isAdmin && (
             <>
-              <ParticipantMarksContainer />
+              {isAllJudgeMarksLoading ? (
+                <Loader />
+              ) : (
+                <ParticipantMarks marks={allJudgeMarks} nominations={nominations} users={users} />
+              )}
               <hr></hr>
             </>
           )}
@@ -93,4 +109,8 @@ Participant.propTypes = {
   marks: PropTypes.object.isRequired,
   withoutMarks: PropTypes.bool.isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  allJudgeMarks: PropTypes.object.isRequired,
+  isAllJudgeMarksLoading: PropTypes.bool.isRequired,
+  nominations: PropTypes.arrayOf(nominationPropType).isRequired,
+  users: PropTypes.arrayOf(userPropType).isRequired,
 };

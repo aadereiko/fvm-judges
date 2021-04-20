@@ -85,6 +85,17 @@ class ManagementService extends BasicService {
     return this._cachedUser;
   }
 
+  async getMarksOfParticipant(participantId) {
+    // not cacheable data
+    const response = await requestAPI(`/users/marks?participantId=${participantId}`);
+
+    if (!response || !response.data) {
+      return null;
+    }
+
+    return response.data;
+  }
+
   clean() {
     this._cachedUsers = [];
     this._cachedUser = null;

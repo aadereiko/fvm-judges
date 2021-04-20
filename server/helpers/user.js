@@ -111,8 +111,35 @@ const getSumsOfUsers = (users) => {
 
   return participantSums;
 };
+
+const getAllMarksOfParticipant = (users, participantId) => {
+  const marks = {};
+  if (users && users.length) {
+    const nominationIds = Object.keys(users[0].marks);
+
+    for (let i = 0; i < users.length; i++) {
+      const currentUser = users[i];
+
+      for (let j = 0; j < nominationIds.length; j++) {
+        if (!marks[nominationIds[j]]) {
+          marks[nominationIds[j]] = {};
+        }
+
+        const value =
+          (currentUser.marks &&
+            currentUser.marks[nominationIds[j]] &&
+            currentUser.marks[nominationIds[j]][participantId]) ||
+          null;
+        marks[nominationIds[j]][currentUser.username] = value;
+      }
+    }
+  }
+
+  return marks;
+};
 module.exports = {
   initJudgeMarks,
   findNextPhoto,
   getSumsOfUsers,
+  getAllMarksOfParticipant,
 };

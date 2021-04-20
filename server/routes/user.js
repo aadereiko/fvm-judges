@@ -4,7 +4,12 @@ const jwt = require('jsonwebtoken');
 
 const { generateResponse } = require('../services/request');
 const auth = require('../middleware/auth');
-const { initJudgeMarks, findNextPhoto, getSumsOfUsers } = require('../helpers/user');
+const {
+  initJudgeMarks,
+  findNextPhoto,
+  getSumsOfUsers,
+  getAllMarksOfParticipant,
+} = require('../helpers/user');
 const router = express.Router();
 
 router.post('/api/users', auth, async (req, res) => {
@@ -138,29 +143,9 @@ router.get('/api/users/marks', auth, async (req, res) => {
     }
 
     const users = await User.find({ role: 'judge' }).select('marks name username');
-    const marks = {};
-    if (users && users.length) {
-      const nominationIds = Object.keys(users[0].marks);
+    const marks = getAllMarksOfParticipant(users, participantId);
 
-      for (let i = 0; i < users.length; i++) {
-        const currentUser = users[i];
-
-        for (let j = 0; j < nominationIds.length; j++) {
-          if (!marks[nominationIds[j]]) {
-            marks[nominationIds[j]] = {};
-          }
-
-          const value =
-            (currentUser.marks &&
-              currentUser.marks[nominationIds[j]] &&
-              currentUser.marks[nominationIds[j]][participantId]) ||
-            null;
-          marks[nominationIds[j]][currentUser.username] = value;
-        }
-      }
-    }
-
-    res.send(generateResponse(sums));
+    res.send(generateResponse(marks));
   } catch (e) {
     res.status(500).send(generateResponse(null, e.message));
   }
