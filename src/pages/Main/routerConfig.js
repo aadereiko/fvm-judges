@@ -32,7 +32,6 @@ export const adminRoutes = [
   { path: '/management/nominations/:id', component: NominationContainer },
   { path: '/management/:id', component: JudgeProfileContainer },
   { path: '/management', component: ManagementContainer },
-  { path: '/photos/full-view/:nominationId/:participantId/:imgUrl', component: FullViewPhoto },
   { path: '/management', isRedirect: true },
 ];
 
