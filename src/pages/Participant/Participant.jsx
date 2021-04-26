@@ -46,9 +46,9 @@ export const Participant = ({
       <h3>Участник {id}</h3>
       {(isLoading && <Loader />) || (
         <>
-          <ParticipantTitleElement className="text-muted">Оценки жюри:</ParticipantTitleElement>
           {isAdmin && (
             <>
+              <ParticipantTitleElement className="text-muted">Оценки жюри:</ParticipantTitleElement>
               {isAllJudgeMarksLoading ? (
                 <Loader />
               ) : (
