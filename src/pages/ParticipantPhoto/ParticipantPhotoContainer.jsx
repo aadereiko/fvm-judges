@@ -25,6 +25,13 @@ export const ParticipantPhotoContainer = () => {
 
     if (marks.look && marks.idea) {
       actions.getNextMark();
+      photoService.setLastMarkedPhoto({
+        link: photo.link,
+        idea: marks.idea,
+        look: marks.look,
+        participantId,
+        nominationId,
+      });
     }
   };
 
