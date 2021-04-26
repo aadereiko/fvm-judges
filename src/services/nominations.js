@@ -17,6 +17,16 @@ class NominationsService {
     return this._cachedNominations;
   }
 
+  async loadNomination(id) {
+    const response = await requestAPI(`/nominations/custom-id/${id}`);
+
+    if (!response || !response.data) {
+      return null;
+    }
+
+    return response.data;
+  }
+
   clean() {
     this._cachedNominations = [];
     this._isLoadingNominations = false;

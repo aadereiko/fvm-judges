@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useAuthState } from '../../contexts';
 import { managementService } from '../../services/management';
 import { nominationsService } from '../../services/nominations';
+import { participantsService } from '../../services/participants';
 import { Participant } from './Participant';
 
 export const ParticipantContainer = () => {
@@ -17,13 +18,12 @@ export const ParticipantContainer = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(`/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/participant/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setParticipant(data);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
+    const fetchParticipant = async () => {
+      const participant = await participantsService.loadParticipant(id);
+      setParticipant(participant);
+      setIsLoading(false);
+    };
+    fetchParticipant();
   }, [setIsLoading]);
 
   useEffect(() => {

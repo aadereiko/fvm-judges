@@ -61,7 +61,7 @@ const createCollection = async (dbName, collectionName) => {
   let data = await connectDB(async (client) => {
     const db = await client.db(dbName).createCollection(collectionName, function (err, result) {
       if (err) throw err;
-      console.log(`Collection ${collectionName} created!`);
+      console.error(`Collection ${collectionName} created!`);
     });
 
     return db;

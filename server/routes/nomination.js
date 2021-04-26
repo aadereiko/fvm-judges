@@ -25,6 +25,27 @@ router.get('/api/nominations/:id', async (req, res) => {
   }
 });
 
+
+router.get('/api/nominations/custom-id/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).send(generateResponse(null, 'Не указан id'));
+    }
+
+    const nomination = await Nomination.findOne({ id });
+
+    if (!nomination) {
+      return res.status(404).send(generateResponse(null, 'Номинация не найдена'));
+    }
+
+    res.send(generateResponse(nomination));
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
 router.get('/api/nominations', async (req, res) => {
   try {
     const nominations = await Nomination.find({});

@@ -80,7 +80,14 @@ export const ParticipantPhoto = ({
             </OverlayTrigger>
           </ArrowRightLinkElement>
 
-          <img src={getFullImage(photo.link)} alt="Фото номинации" onLoad={setImageLoaded}></img>
+          <Link
+            to={`/photos/full-view/${nominationId}/${participantId}/${photo.link.replace(
+              'https://drive.google.com/uc?id=',
+              '',
+            )}`}
+          >
+            <img src={getFullImage(photo.link)} alt="Фото номинации" onLoad={setImageLoaded}></img>
+          </Link>
         </PhotoWrapperElement>
         <PhotoInfoBlockElement>
           <h3>{nominationName}</h3>

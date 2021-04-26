@@ -19,6 +19,16 @@ class ParticipantsService extends BasicService {
     return this._cachedParticipants;
   }
 
+  async loadParticipant(id) {
+    const response = await requestAPI(`/participants/custom-id/${id}`);
+
+    if (!response || !response.data) {
+      return null;
+    }
+
+    return response.data;
+  }
+
   clean() {
     this._cachedParticipants = [];
     this._isLoadingParticipants = false;

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routes/user');
 const nominationRouter = require('./routes/nomination');
 const participantRouter = require('./routes/participant');
+const photoRouter = require('./routes/photo');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -25,6 +26,8 @@ app.use(function (req, res, next) {
 app.use(userRouter);
 app.use(nominationRouter);
 app.use(participantRouter);
+app.use(participantRouter);
+app.use(photoRouter);
 
 // app.get('/api/google', (req, res) => {
 //   google.init(res)
@@ -98,6 +101,7 @@ app.get('/api/mongo/season/:id/participants', async (req, res) => {
 });
 
 app.get('/api/mongo/season/:id/participant/:participantId', async (req, res) => {
+  console.log('get participant fix');
   let seasonId = req.params.id;
   let participantId = req.params.participantId;
   let participant = await mongodb.getParticipant(seasonId, participantId);
@@ -108,6 +112,8 @@ app.get('/api/mongo/season/:id/participant/:participantId', async (req, res) => 
 app.get(
   '/api/mongo/season/:id/nomination/:nominationId/participant/:participantId',
   async (req, res) => {
+
+    console.log('FIX FIX FIX');
     let seasonId = req.params.id;
     let nominationId = req.params.nominationId;
     let participantId = req.params.participantId;

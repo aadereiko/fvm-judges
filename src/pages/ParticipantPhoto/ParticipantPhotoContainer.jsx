@@ -3,15 +3,14 @@ import { useParams } from 'react-router-dom';
 import { ParticipantPhoto } from './ParticipantPhoto';
 import { useAuthState } from '../../contexts/AuthContext';
 import { authService } from '../../services/auth';
+import { photoService } from '../../services/photo';
 
 export const ParticipantPhotoContainer = () => {
   const { participantId, nominationId } = useParams({});
   const [nominationName, setNominationName] = useState('');
   const [photo, setPhoto] = useState();
   // const [mark, setMark] = useState({});
-  const [isLoadingNomination, setIsLoadingNomination] = useState(true);
-  const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
-  const [isLoadingMark, setIsLoadingMark] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, actions } = useAuthState();
 
   const handleMarkChange = async ({ type, mark }) => {
@@ -30,29 +29,19 @@ export const ParticipantPhotoContainer = () => {
   };
 
   useEffect(() => {
-    fetch(`
-      /api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${nominationId}/participant/${participantId}
-    `)
-      .then((response) => response.json())
-      .then(({ name, link, id }) => {
-        setPhoto({ name, link, id });
-        setIsLoadingPhoto(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoadingPhoto(false);
+    const loadPhoto = async () => {
+      const loadedPhoto = await photoService.loadPhoto({
+        nominationId,
+        participantId,
       });
-    fetch(`/api/mongo/season/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk/nomination/${nominationId}`)
-      .then((response) => response.json())
-      .then(({ name }) => {
-        setNominationName(name);
-        setIsLoadingNomination(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoadingNomination(false);
-      });
-  }, [participantId, nominationId]);
+      if (loadedPhoto) {
+        setPhoto(loadedPhoto.photo);
+        setNominationName(loadedPhoto.nomination.name);
+        setIsLoading(false);
+      }
+    };
+    loadPhoto();
+  }, [participantId, nominationId, setIsLoading, setNominationName, setPhoto]);
 
   return (
     <ParticipantPhoto
@@ -61,7 +50,7 @@ export const ParticipantPhotoContainer = () => {
       photo={photo}
       mark={user.marks[nominationId][participantId]}
       nominationName={nominationName}
-      isLoading={isLoadingNomination || isLoadingPhoto}
+      isLoading={isLoading}
       onMarkChange={handleMarkChange}
     />
   );

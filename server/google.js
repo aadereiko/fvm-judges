@@ -139,7 +139,7 @@ async function getPhoto(photoId) {
       fileId: photoId
     }).then().catch(err => console.log(err));
 
-    return { name: photoName.data.title, link: photoName.data.thumbnailLink, id: photoId }
+    return { name: photoName.data.title, link: photoName.data.webContentLink, id: photoId }
   })
 
   return data;
