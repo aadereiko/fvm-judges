@@ -26,7 +26,8 @@ router.get('/api/photos/custom-id', async (req, res) => {
       (photo) => photo.name.split('_')[0] == participantId,
     )[0];
     const photo = await google.getPhoto(mongoPhoto.id);
-
+    photo.participant = photo.name;
+    photo.name = participantId;
     res.send(
       generateResponse({
         photo,

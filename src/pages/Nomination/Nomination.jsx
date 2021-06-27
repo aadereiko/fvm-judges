@@ -9,18 +9,18 @@ import { renderTooltipedMarkLabel } from '../../shared/helpers/mark';
 
 export const Nomination = ({ name, id, photos, isLoading, marks, withoutMarks, isAdmin }) => {
   const [nominationPhotos, setPhotos] = useState({});
-  const getPhotoLink = async (photoId) => {
+  const getPhotoLink = async (photoId, nomiationId) => {
     fetch(`
       /api/google/photo/${photoId}
     `)
       .then((response) => response.json())
       .then(({ name, link, id }) => {
-        setPhotos((prevState) => ({ ...prevState, [name]: { name, link, id } }));
+        setPhotos((prevState) => ({ ...prevState, [nomiationId]: { name, link, id } }));
       })
       .catch((err) => console.log(err));
   };
   useEffect(() => {
-    photos.map((photo) => getPhotoLink(photo.id));
+    photos.map((photo) => getPhotoLink(photo.id, photo.name));
   }, [photos]);
   return (
     <NominationWrapperElement>

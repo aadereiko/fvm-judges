@@ -96,6 +96,17 @@ class ManagementService extends BasicService {
     return response.data;
   }
 
+  async getBestMarks(participantId) {
+    // not cacheable data
+    const response = await requestAPI(`/users/marks/best`);
+
+    if (!response || !response.data) {
+      return null;
+    }
+
+    return response.data;
+  }
+
   clean() {
     this._cachedUsers = [];
     this._cachedUser = null;

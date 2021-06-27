@@ -137,9 +137,59 @@ const getAllMarksOfParticipant = (users, participantId) => {
 
   return marks;
 };
+
+const getBestMarks = async (users) => {
+  const nominationNames = (await Nomination.find({}).select(['id', 'name'])).map(({ id, name }) => ({ id: id, name: name }));
+  const participantsNames = (await Participant.find({}).select(['id', 'name'])).map(({ id, name }) => ({ id: id, name: name }));
+  const marks = {};
+  if (users && users.length) {
+    const nominationIds = Object.keys(users[0].marks);
+
+    for (let i = 0; i < users.length; i++) {
+      const currentUser = users[i];
+
+      for (let j = 0; j < nominationIds.length; j++) {
+        if (!marks[nominationIds[j]]) {
+          marks[nominationIds[j]] = {};
+        }
+
+        const value = (currentUser.marks && currentUser.marks[nominationIds[j]]) || null;
+        marks[nominationIds[j]][currentUser.username] = value;
+      }
+    }
+  }
+
+  const getName = (id, array) => array.filter((part) => +part.id === +id)[0].name;
+  
+  const getSumMarks = (users, participantId) => {
+    let sum = 0;
+    users.forEach((user) => {
+      participant = user[participantId];
+      sum += (participant.look + participant.idea) / 2;
+    });
+    return sum;
+  };
+
+  let nominations = {};
+  Object.keys(marks).forEach((nomination) => {
+    let users = Object.keys(marks[nomination]);
+    let participants = {};
+    Object.keys(marks[nomination][users[0]]).map((participant) => (
+      participants[getName(`${participant}`, participantsNames)] = getSumMarks(
+        Object.values(marks[nomination]),
+          participant,
+      )
+    ));
+    nominations[getName(nomination, nominationNames)] = [...Object.entries(participants)].reduce((a, b) => (b[1] > a[1] ? b : a));
+  });
+
+  return nominations;
+};
+
 module.exports = {
   initJudgeMarks,
   findNextPhoto,
   getSumsOfUsers,
   getAllMarksOfParticipant,
+  getBestMarks,
 };

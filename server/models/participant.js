@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 const participantSchema = new mongoose.Schema({
   id: {
-    type: Number,
-    required: true,
+    // type: Number,
+    // required: true,
   },
+  name: {},
   nominations: {},
 });
 

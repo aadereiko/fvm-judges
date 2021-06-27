@@ -1,5 +1,18 @@
 const google = require('./google');
 const mongodb = require('./mongodb');
+let numbers = {};
+let count = 1;
+
+
+const getParticipantId = (name) => {
+  if (!numbers[name]) {
+    numbers[name] = `${count}`;
+    count += 1;
+    return numbers[name];
+  } else {
+    return numbers[name]
+  }
+}
 
 const create = async (seasonId) => {
   const season = await mongodb.createSeason(seasonId);
@@ -23,6 +36,8 @@ const setNominations = async (seasonId) => {
       const photos = [];
       for (const photoId of nomination.photosId) {
         const photo = await google.getPhoto(photoId);
+        photo.participant = photo.name;
+        photo.name = getParticipantId(photo.name.split('.jpg')[0].split('_')[0]);
         await delay(500);
         photos.push(photo);
       }
@@ -48,22 +63,28 @@ const setParticipants = async (seasonId, nominations) => {
 
   nominations.map((nomination) => {
     nomination.photos.map((photo) => {
-      let participantName = +photo.name.split('.jpg')[0].split('_')[0];
-      if (!participants[participantName]) {
-        participants[participantName] = {
-          id: participantName,
+      let participantName = photo.participant.split('.jpg')[0].split('_')[0];
+      
+      if (!participants[getParticipantId(participantName)]) {
+        participants[getParticipantId(participantName)] = {
+          id: getParticipantId(participantName),
+          name: participantName,
           nominations: {},
         };
+        count++;
       }
-      if (!participants[participantName].nominations[nomination.id]) {
-        participants[participantName].nominations[nomination.id] = {
+
+      if (!participants[getParticipantId(participantName)].nominations[nomination.id]) {
+        participants[getParticipantId(participantName)].nominations[nomination.id] = {
           name: nomination.name,
           photo: [],
         };
       }
-      participants[participantName].nominations[nomination.id].photo.push(photo);
+
+      participants[getParticipantId(participantName)].nominations[nomination.id].photo.push(photo);
+
       if (!marks[nomination.id]) marks[nomination.id] = {};
-      marks[nomination.id][participantName] = {
+      marks[nomination.id][getParticipantId(participantName)] = {
         idea: 0,
         look: 0,
       };
@@ -95,4 +116,4 @@ const setUser = async (seasonId, marks, username, name, role) => {
 
   return newUser;
 };
-create('1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk');
+create('1GPQ7o4Xj55lXBnK0OnpYruwMQ6ZCuCk3');

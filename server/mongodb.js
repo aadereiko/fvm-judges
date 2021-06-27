@@ -3,7 +3,8 @@ const assert = require('assert');
 const uri =
   'mongodb+srv://fvmMajor:FVMspring20201@judgesinfo.9yzop.mongodb.net/JudgesInfo?retryWrites=true&w=majority';
 const currentSeasonURI =
-  'mongodb+srv://fvmMajor:FVMspring20201@judgesinfo.9yzop.mongodb.net/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk?retryWrites=true&w=majority';
+  // 'mongodb+srv://fvmMajor:FVMspring20201@judgesinfo.9yzop.mongodb.net/1XAJjK-Ydz23ykAoVW1dEVSSMlHSKXgdk?retryWrites=true&w=majority';
+  'mongodb+srv://fvmMajor:FVMspring20201@judgesinfo.9yzop.mongodb.net/1GPQ7o4Xj55lXBnK0OnpYruwMQ6ZCuCk3?retryWrites=true&w=majority';
 
 const mongoose = require('mongoose');
 

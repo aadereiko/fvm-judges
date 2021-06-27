@@ -36,6 +36,14 @@ export const ParticipantContainer = () => {
     isAdmin && loadMarks();
   }, [id, setIsMarksLoading, setAllJudgesMarks, isAdmin]);
 
+  // useEffect(() => {
+  //   const loadAllMarks = async () => {
+  //     const marks = await managementService.getBestMarks();
+  //     console.log("Лучшие оценки", marks);
+  //   };
+  //   isAdmin && loadAllMarks();
+  // }, []);
+
   useEffect(() => {
     const fetchUsers = async () => {
       const users = await managementService.getUsers();

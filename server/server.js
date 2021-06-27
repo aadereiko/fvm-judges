@@ -57,7 +57,6 @@ app.get('/api/google/nomination/name/:id', (req, res) => {
 app.get('/api/google/photo/:id', async (req, res) => {
   let photoId = req.params.id;
   let photo = await google.getPhoto(photoId);
-
   res.send(photo);
 });
 

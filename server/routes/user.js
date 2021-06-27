@@ -9,6 +9,7 @@ const {
   findNextPhoto,
   getSumsOfUsers,
   getAllMarksOfParticipant,
+  getBestMarks,
 } = require('../helpers/user');
 const router = express.Router();
 
@@ -151,6 +152,21 @@ router.get('/api/users/marks', auth, async (req, res) => {
   }
 });
 
+router.get('/api/users/marks/best', auth, async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(401).send(generateResponse(null, 'Нет прав смотреть оценки участника'));
+    }
+
+    const users = await User.find({ role: 'judge' }).select('marks name username');
+    const marks = await getBestMarks(users);
+
+    res.send(generateResponse(marks));
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
 router.get('/api/users/:id', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') {
@@ -186,6 +202,21 @@ router.put('/api/user/:nomId/:partId', auth, async (req, res) => {
     await User.updateOne({ username: id }, { $set: { marks: user.marks } });
 
     res.send(generateResponse(user.marks[nomId][partId]));
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
+router.get('/api/users/marks/best', auth, async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(401).send(generateResponse(null, 'Нет прав смотреть оценки участника'));
+    }
+
+    const users = await User.find({ role: 'judge' }).select('marks name username');
+    const marks = getAllMarksOfParticipant(users, participantId);
+
+    res.send(generateResponse(marks));
   } catch (e) {
     res.status(500).send(generateResponse(null, e.message));
   }

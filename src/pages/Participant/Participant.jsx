@@ -26,19 +26,21 @@ export const Participant = ({
   users,
 }) => {
   const [photos, setPhotos] = useState({});
-  const getPhotoLink = async (photoId) => {
+  const getPhotoLink = async (photoId, nomiationId) => {
     fetch(`
       /api/google/photo/${photoId}
     `)
       .then((response) => response.json())
       .then(({ name, link, id }) => {
-        setPhotos((prevState) => ({ ...prevState, [name]: { name, link, id } }));
+        setPhotos((prevState) => ({ ...prevState, [nomiationId]: { name, link, id } }));
       })
       .catch((err) => console.log(err));
   };
   useEffect(() => {
     Object.keys(participant.nominations).map((nominationKey) =>
-      participant.nominations[nominationKey].photo.map((photo) => getPhotoLink(photo.id)),
+      participant.nominations[nominationKey].photo.map((photo) =>
+        getPhotoLink(photo.id, nominationKey),
+      ),
     );
   }, []);
   return (
@@ -66,7 +68,7 @@ export const Participant = ({
                     {participant.nominations[nominationKey].photo.map((photo, index) => (
                       <Card.Img
                         variant="top"
-                        src={photos[photo.name] ? photos[photo.name].link : ''}
+                        src={photos[nominationKey] ? photos[nominationKey].link : ''}
                         key={index}
                       />
                     ))}

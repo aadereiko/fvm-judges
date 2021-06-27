@@ -67,7 +67,6 @@ export const ParticipantPhoto = ({
   }, [photo, setIsImageLoading]);
 
   const setImageLoaded = () => setIsImageLoading(false);
-
   return !isLoading ? (
     (photo && (
       <ParticipantPhotoWrapperElement>
