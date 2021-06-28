@@ -87,6 +87,16 @@ class AuthService extends BasicService {
     return this._nextMark;
   }
 
+  async getNextNominationMark(nomId) {
+    const response = await requestAPI(`/users/notMarked/${nomId}`);
+
+    if (response && response.data) {
+      this._nextMark = response.data;
+    }
+
+    return this._nextMark;
+  }
+
   async putMark({ type, mark, nominationId, participantId }) {
     const response = await requestAPI(`/user/${nominationId}/${participantId}`, {
       method: 'PUT',

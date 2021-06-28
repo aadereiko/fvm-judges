@@ -10,6 +10,7 @@ const {
   getSumsOfUsers,
   getAllMarksOfParticipant,
   getBestMarks,
+  findNextNominationPhoto,
 } = require('../helpers/user');
 const router = express.Router();
 
@@ -107,6 +108,27 @@ router.get('/api/users/notMarked', auth, async (req, res) => {
     // nomination,
     // user
     let next = findNextPhoto(user.marks);
+    if (!next) {
+      return res.send(generateResponse(null));
+    }
+    res.send(generateResponse(next));
+  } catch (e) {
+    res.status(500).send(generateResponse(null, e.message));
+  }
+});
+
+router.get('/api/users/notMarked/:nomId', auth, async (req, res) => {
+  try {
+    const user = req.user;
+    const nomId = req.params.nomId;
+
+    if (!user.marks) {
+      throw new Error('Неправильный формат данных');
+    }
+
+    // nomination,
+    // user
+    let next = findNextNominationPhoto(user.marks, nomId);
     if (!next) {
       return res.send(generateResponse(null));
     }

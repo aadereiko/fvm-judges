@@ -64,6 +64,50 @@ const findNextPhoto = (marks) => {
   return next;
 };
 
+const findNextNominationPhoto = (marks, nomId) => {
+  let isNextFound = false;
+  let next = null;
+  const nominationIds = Object.keys(marks);
+
+  const participantsOfNomination = marks[nomId];
+  const participantIds = Object.keys(participantsOfNomination);
+
+  for(let partId of participantIds) {
+    if (!participantsOfNomination[partId].idea || !participantsOfNomination[partId].look) {
+      isNextFound = true;
+      next = {
+        nominationId: nomId,
+        participantId: partId,
+      };
+      break;
+    }
+  }
+
+  // if (participantIds && participantIds.length) {
+  //   for (let i = 0; j < participantIds.length; i++) {
+  //     // there are no photos
+  //     if (!participantsOfNomination[participantIds[j]]) {
+  //       continue;
+  //     } else if (
+  //       !participantsOfNomination[participantIds[j]].idea ||
+  //       !participantsOfNomination[participantIds[j]].look
+  //     ) {
+  //       isNextFound = true;
+  //       next = {
+  //         nominationId: nominationIds[i],
+  //         participantId: participantIds[j],
+  //       };
+  //     }
+
+  //     if (isNextFound) {
+  //       break;
+  //     }
+  //   }
+  // }
+
+  return next;
+};
+
 const getSumsOfUsers = (users) => {
   const participantSums = {};
   if (users && users.length) {
@@ -192,4 +236,5 @@ module.exports = {
   getSumsOfUsers,
   getAllMarksOfParticipant,
   getBestMarks,
+  findNextNominationPhoto,
 };

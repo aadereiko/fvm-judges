@@ -4,7 +4,6 @@ import { useAuthState } from '../../contexts';
 
 export const NextPhoto = () => {
   const { nextMark } = useAuthState();
-
   return (
     <Redirect
       to={

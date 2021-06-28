@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {
   ParticipantPhotoWrapperElement,
@@ -18,6 +18,8 @@ import { Loader } from '../../shared';
 
 import { ReactComponent as ArrowRightIcon } from '../../shared/assets/icons/arrow-right-circle-fill.svg';
 import { OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
+
+import { authService } from '../../services/auth';
 
 const getMarkStar = (currentMark, setMark, section, clickCallback = () => {}) => {
   const props = {
@@ -51,6 +53,7 @@ export const ParticipantPhoto = ({
   const [look, setLook] = useState((mark && mark.look) || 0);
   const [idea, setIdea] = useState((mark && mark.idea) || 0);
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [nextPhoto, setNextPhoto] = useState({});
 
   const setMarks = (mark, type) => {
     type == 'look' ? setLook(mark) : setIdea(mark);
@@ -60,25 +63,39 @@ export const ParticipantPhoto = ({
   useEffect(() => {
     setLook((mark && mark.look) || 0);
     setIdea((mark && mark.idea) || 0);
+    getNextNominationPhoto();
   }, [mark, participantId, nominationId, setLook, setIdea]);
 
   useEffect(() => {
     setIsImageLoading(true);
   }, [photo, setIsImageLoading]);
 
+  const getNextNominationPhoto = useCallback(async () => {
+    const mark = await authService.getNextNominationMark(nominationId);
+    setNextPhoto(mark);
+  }, [setNextPhoto]);
+
+  // useEffect(() => {
+  //   console.log(231);
+  // }, [idea, look]);
+
   const setImageLoaded = () => setIsImageLoading(false);
   return !isLoading ? (
     (photo && (
       <ParticipantPhotoWrapperElement>
         <PhotoWrapperElement>
-          <ArrowLeftIconElement width="6%" height="6%" />
-
-          <ArrowRightLinkElement to="/nextPhoto">
-            <OverlayTrigger overlay={<Tooltip>Перейти к неоцененной фотографии</Tooltip>}>
-              <ArrowRightIcon width="100%" height="100%" />
-            </OverlayTrigger>
-          </ArrowRightLinkElement>
-
+          {/* <ArrowLeftIconElement width="6%" height="6%" /> */}
+          {nextPhoto &&
+            nextPhoto.participantId !== participantId &&
+            nextPhoto.nominationId === nominationId && (
+              <ArrowRightLinkElement
+                to={`/photos/${nextPhoto.nominationId}/${nextPhoto.participantId}`}
+              >
+                <OverlayTrigger overlay={<Tooltip>Перейти к неоцененной фотографии</Tooltip>}>
+                  <ArrowRightIcon width="100%" height="100%" />
+                </OverlayTrigger>
+              </ArrowRightLinkElement>
+            )}
           <Link
             to={`/photos/full-view/${nominationId}/${participantId}/${photo.link.replace(
               'https://drive.google.com/uc?id=',

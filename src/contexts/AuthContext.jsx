@@ -15,6 +15,7 @@ const authDataDefault = {
     login: () => {},
     logout: () => {},
     getNextMark: () => {},
+    getNextNominationMark: (nomId) => getNextMark(nomId),
   },
 };
 
@@ -57,11 +58,25 @@ export const AuthProvider = ({ children }) => {
     }
   }, [setAuthData]);
 
+  const getNextNominationMark = useCallback(
+    async (nomId) => {
+      const mark = await authService.getNextNominationMark(nomId);
+      if (mark) {
+        setAuthData((state) => ({
+          ...state,
+          nextNominationMark: mark,
+        }));
+      }
+    },
+    [setAuthData],
+  );
+
   useEffect(() => {
     const actions = {};
     actions.login = login;
     actions.logout = logout;
     actions.getNextMark = getNextMark;
+    actions.getNextNominationMark = getNextNominationMark;
 
     const fetchData = async () => {
       const currentUser = await authService.getCurrentUser();
@@ -83,7 +98,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
     fetchData();
-  }, [setAuthData, login, logout, getNextMark]);
+  }, [setAuthData, login, logout, getNextMark, getNextNominationMark]);
 
   return (
     <AuthContext.Provider value={authData}>
