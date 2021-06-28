@@ -37,7 +37,7 @@ const setNominations = async (seasonId) => {
       for (const photoId of nomination.photosId) {
         const photo = await google.getPhoto(photoId);
         photo.participant = photo.name;
-        photo.name = getParticipantId(photo.name.split('.jpg')[0].split('_')[0]);
+        photo.name = getParticipantId(photo.name.split('.jpg')[0].split('.JPG')[0].split('_')[0]);
         await delay(500);
         photos.push(photo);
       }
@@ -63,7 +63,7 @@ const setParticipants = async (seasonId, nominations) => {
 
   nominations.map((nomination) => {
     nomination.photos.map((photo) => {
-      let participantName = photo.participant.split('.jpg')[0].split('_')[0];
+      let participantName = photo.participant.split('.jpg')[0].split('.JPG')[0].split('_')[0];
       
       if (!participants[getParticipantId(participantName)]) {
         participants[getParticipantId(participantName)] = {
