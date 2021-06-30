@@ -37,7 +37,7 @@ const setNominations = async (seasonId) => {
       for (const photoId of nomination.photosId) {
         const photo = await google.getPhoto(photoId);
         photo.participant = photo.name;
-        photo.name = getParticipantId(photo.name.split('.jpg')[0].split('_')[0]);
+        photo.name = getParticipantId(photo.name.split('.jpg')[0].split('.JPG')[0].split('_')[0]);
         await delay(500);
         photos.push(photo);
       }
@@ -63,7 +63,7 @@ const setParticipants = async (seasonId, nominations) => {
 
   nominations.map((nomination) => {
     nomination.photos.map((photo) => {
-      let participantName = photo.participant.split('.jpg')[0].split('_')[0];
+      let participantName = photo.participant.split('.jpg')[0].split('.JPG')[0].split('_')[0];
       
       if (!participants[getParticipantId(participantName)]) {
         participants[getParticipantId(participantName)] = {
@@ -99,7 +99,16 @@ const setParticipants = async (seasonId, nominations) => {
 
   const adminUser = await setUser(seasonId, marks, 'admin', 'Admin', 'admin');
   const judgeUser = await setUser(seasonId, marks, 'user', 'Пользователь с какими-то оценками', 'judge');
-  const sanyaUser = await setUser(seasonId, marks, 'aadereiko', 'Александр Адерейко', 'judge');
+  const user1 = await setUser(seasonId, marks, 'aadereiko', 'Александр Адерейко', 'judge');
+  const user2 = await setUser(seasonId, marks, 'pidor', 'Марика и Даша', 'judge');
+  const user3 = await setUser(seasonId, marks, 'Maksim', 'Максим МВО', 'judge');
+  const user4 = await setUser(seasonId, marks, 'patut', 'Андрей и Аня', 'judge');
+  const user5 = await setUser(seasonId, marks, 'promo', 'Павел Барановский', 'judge');
+  const user6 = await setUser(seasonId, marks, 'winner', 'Яна Иванова', 'judge');
+  const user7 = await setUser(seasonId, marks, 'piccha', 'Кристина Ядловская', 'judge');
+  const user8 = await setUser(seasonId, marks, 'boss', 'Ренат Мухиянов', 'judge');
+  const user9 = await setUser(seasonId, marks, '4s', 'Светлана 4S', 'judge');
+  const user10 = await setUser(seasonId, marks, 'mister2016', 'Максим Русецкий', 'judge');
 
   return data;
 };
