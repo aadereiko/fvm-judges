@@ -10,7 +10,8 @@ import { OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import { nominationPropType, participantPropType } from '../../shared/propTypes';
 import { Link } from 'react-router-dom';
 import { regionUsersMap } from '../../mock/regions';
-import { ParticipantPlaces } from './ParticipantPlaces/ParticipantPlaces';
+import { ParticipantFirstPlaces } from './ParticipantFirstPlaces/ParticipantFirstPlaces';
+import { ParticipantPlaces } from './ParticipantPlaces';
 
 export const ManagementParticipants = ({ isLoading, marks, nominations, participants }) => {
   return (
@@ -21,7 +22,11 @@ export const ManagementParticipants = ({ isLoading, marks, nominations, particip
       ) : (
         <>
           <h4>Победители</h4>
-          <ParticipantPlaces marks={marks} nominations={nominations} participants={participants} />
+          <ParticipantFirstPlaces
+            marks={marks}
+            nominations={nominations}
+            participants={participants}
+          />
           <h4>Оценки</h4>
           <Table hover bordered responsive striped size="sm">
             <thead>
@@ -97,6 +102,8 @@ export const ManagementParticipants = ({ isLoading, marks, nominations, particip
               ))}
             </tbody>
           </Table>
+          <h4>Места</h4>
+          <ParticipantPlaces marks={marks} participants={participants} nominations={nominations} />
         </>
       )}
     </ManagementPraticipantsWrapperElement>

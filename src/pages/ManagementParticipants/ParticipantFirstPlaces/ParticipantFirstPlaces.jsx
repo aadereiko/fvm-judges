@@ -2,13 +2,10 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { nominationPropType, participantPropType } from '../../../shared/propTypes';
-import { RegionTDElement } from '../elements';
-import { ParticipantPlacesWrapperElement } from './elements';
 import { regionUsersMap } from '../../../mock/regions';
 
-export const ParticipantPlaces = ({ marks, nominations, participants }) => {
+export const ParticipantFirstPlaces = ({ marks, nominations, participants }) => {
   const [regionsMax, minskMax] = useMemo(() => {
     let maxRegionSum = Number.MIN_VALUE;
     let regionParticipants = [];
@@ -91,7 +88,7 @@ export const ParticipantPlaces = ({ marks, nominations, participants }) => {
   }, [marks, nominations, participants]);
 
   return (
-    <ParticipantPlacesWrapperElement>
+    <div>
       <Table hover bordered responsive striped size="sm">
         <thead>
           <tr>
@@ -179,11 +176,11 @@ export const ParticipantPlaces = ({ marks, nominations, participants }) => {
           </tr>
         </tbody>
       </Table>
-    </ParticipantPlacesWrapperElement>
+    </div>
   );
 };
 
-ParticipantPlaces.propTypes = {
+ParticipantFirstPlaces.propTypes = {
   marks: PropTypes.object.isRequired,
   participants: PropTypes.arrayOf(participantPropType).isRequired,
   nominations: PropTypes.arrayOf(nominationPropType).isRequired,
